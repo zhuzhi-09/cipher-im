@@ -8,7 +8,8 @@ plugins {
 
 android {
     namespace = "io.github.zhuzhi_09.cipherim"
-    compileSdk = flutter.compileSdkVersion
+    // flutter_local_notifications 23 要求至少用 API 37 编译
+    compileSdk = maxOf(flutter.compileSdkVersion, 37)
     ndkVersion = flutter.ndkVersion
 
     compileOptions {
