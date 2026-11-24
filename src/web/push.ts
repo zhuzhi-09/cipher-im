@@ -57,7 +57,26 @@ async function subscribe(token: string, reg: ServiceWorkerRegistration): Promise
 }
 
 /** 必须在用户点击里调用：iOS 和 Safari 不允许在没有用户手势时申请通知权限 */
+/** 用户主动点过「关闭」就记下来：之后即使浏览器权限是允许，也不自动重新订阅 */
+const OPT_OUT_KEY = 'cipherim.pushOptOut';
+const optedOut = () => {
+  try {
+    return localStorage.getItem(OPT_OUT_KEY) === '1';
+  } catch {
+    return false;
+  }
+};
+const setOptOut = (v: boolean) => {
+  try {
+    if (v) localStorage.setItem(OPT_OUT_KEY, '1');
+    else localStorage.removeItem(OPT_OUT_KEY);
+  } catch {
+    /* 隐私模式下 localStorage 可能不可用 */
+  }
+};
+
 export async function enablePush(token: string): Promise<PushState> {
+  setOptOut(false);
   const st = await pushState();
   if (st === 'unsupported' || st === 'ios-needs-install') return st;
   const perm = await Notification.requestPermission();
@@ -67,6 +86,7 @@ export async function enablePush(token: string): Promise<PushState> {
 }
 
 export async function disablePush(token: string): Promise<PushState> {
+  setOptOut(true);
   const reg = await navigator.serviceWorker.getRegistration();
   const sub = await reg?.pushManager.getSubscription();
   if (sub) {
@@ -76,12 +96,40 @@ export async function disablePush(token: string): Promise<PushState> {
   return pushState();
 }
 
-/** 每次进入主界面时悄悄同步一次：浏览器可能换了订阅，或者这台设备换了账号 */
-export async function syncPush(token: string): Promise<void> {
+/**
+ * 每次进入主界面、以及浏览器通知权限变化时悄悄同步一次：
+ *  - 浏览器可能换了订阅，或者这台设备换了账号
+ *  - 用户可能是在浏览器设置里手动把通知改成了「允许」（比如 Edge 默认静默拦截权限请求），
+ *    这时网页没机会走「开启」按钮，要在这里补上订阅
+ * 用户自己点过「关闭」的不自动开。返回同步后的状态。
+ */
+export async function syncPush(token: string): Promise<PushState> {
   try {
-    if ((await pushState()) !== 'on') return;
+    const st = await pushState();
+    if (st !== 'on' && st !== 'off') return st;
+    if (Notification.permission !== 'granted' || optedOut()) return st;
     await subscribe(token, await registration());
+    return 'on';
   } catch {
     /* 同步失败不影响聊天，下次打开再试 */
+    return pushState().catch(() => 'unsupported' as const);
   }
+}
+
+/** 浏览器通知权限变化时回调（在浏览器设置里改了权限，页面不刷新也能知道） */
+export function onPermissionChange(cb: () => void): () => void {
+  let status: PermissionStatus | null = null;
+  let stopped = false;
+  navigator.permissions
+    ?.query({ name: 'notifications' })
+    .then((s) => {
+      if (stopped) return;
+      status = s;
+      s.onchange = cb;
+    })
+    .catch(() => {});
+  return () => {
+    stopped = true;
+    if (status) status.onchange = null;
+  };
 }

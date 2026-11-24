@@ -6,7 +6,7 @@
 > **未经专业安全审计。** 加密协议参照 Signal（X3DH + 双棘轮 + Sender Key）自行实现，有几处有意的差异（见 [`docs/SECURITY.md`](docs/SECURITY.md)）。
 > 适合自己和熟人小范围使用、学习和审阅；请不要把它当成经过验证的安全产品用在高风险场景。
 
-- **形态**：Web / PWA（浏览器打开即用，可加到手机主屏）；原生客户端（Flutter）开发中
+- **形态**：Web / PWA（浏览器打开即用，可加到手机主屏）；原生客户端（Flutter，Windows / 安卓）可用的早期版本，安装包由 GitHub Actions 构建
 - **分工**：Web 端只保留基础聊天功能（单聊、群聊、文件、安全码、漫游、通知）；后续高级功能只做进原生客户端
 - **外观**：扁平极简（Linear 风），浅色 / 深色双主题，默认跟随系统，可在设置里固定
 - **实测**：加密内核 39 项自测、端到端联测 18 项、浏览器 UI 冒烟 12 项、保留期清理 8 项、主题系统 11 项，全绿
@@ -56,6 +56,8 @@ src/web/             Web 客户端（React + IndexedDB 密钥库 + PWA）
   ├─ theme.ts        主题偏好解析（跟随系统 / 浅色 / 深色）→ <html data-theme>
   └─ icons.tsx       统一线描 SVG 图标（不再用 emoji）
 src/tests/           加密自测、端到端联测、密钥库往返、保留期清理
+app/core/            Dart 加密核心与网络层（与 Web 端逐字节兼容，不依赖 Flutter）
+app/client/          Flutter 原生客户端（Windows / 安卓），见 app/client/README.md
 deploy/              服务器一键装机脚本
 scripts/             setup / build / run / test / e2e / ui-smoke / mode-shots / theme-check / package-release
 docs/                SECURITY（威胁模型）、PROTOCOL（协议）、DEPLOY（部署）

@@ -26,7 +26,7 @@ import {
   IconUsers,
 } from './icons';
 import { applyTheme, getThemePref, onSystemThemeChange, setThemePref, ThemePref } from './theme';
-import { disablePush, enablePush, pushState, PushState, syncPush } from './push';
+import { disablePush, enablePush, onPermissionChange, PushState, syncPush } from './push';
 import { LICENSE_NAME, SOURCE_URL } from './about';
 
 interface ChatMsg extends LocalMsg {
@@ -1489,7 +1489,7 @@ const PUSH_LABEL: Record<PushState, string> = {
 const PUSH_HINT: Record<PushState, string> = {
   on: '页面不在前台时弹系统通知，通知里只写「你有新消息」。',
   off: '开启后，关掉页面或切到后台也能收到提醒。',
-  denied: '到浏览器或系统设置里，把本站的通知改回「允许」。',
+  denied: '浏览器拦截了本站的通知：点地址栏左边的锁图标，把「通知」改成允许。改好后这里会自动开启。',
   'ios-needs-install': '在 Safari 点「分享 → 添加到主屏幕」，之后从主屏图标打开再来开启（iOS 16.4+）。',
   unsupported: '电脑上建议用 Edge。',
 };
@@ -1499,9 +1499,14 @@ function NotifySection({ token }: { token: string }) {
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState('');
 
+  // 打开设置时同步一次；页面开着时在浏览器设置里改了通知权限，也立刻跟上（允许了就自动补上订阅）
   useEffect(() => {
-    pushState().then(setSt).catch(() => setSt('unsupported'));
-  }, []);
+    const refresh = () => {
+      syncPush(token).then(setSt).catch(() => setSt('unsupported'));
+    };
+    refresh();
+    return onPermissionChange(refresh);
+  }, [token]);
 
   const toggle = async () => {
     setBusy(true);

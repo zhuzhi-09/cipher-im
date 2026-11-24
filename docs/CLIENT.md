@@ -32,10 +32,10 @@
 
 客户端的加密实现必须和 Web 端逐字节兼容。兼容性靠测试数据保证：
 
-- `scripts/export-vectors.ts` 用确定性随机数跑一遍现有 TypeScript 加密代码，导出每一步的输入和输出
+- `bash scripts/vectors.sh export` 用确定性随机数跑一遍现有 TypeScript 加密代码，把每一步的输入和输出导出到 `spec/vectors/crypto-v1.json`（格式见 [`spec/vectors/README.md`](../spec/vectors/README.md)）
 - Dart 实现必须全部对上，再加一轮「Flutter 客户端 ↔ Web 客户端」互发消息的联测
 
-本地密钥库只在本机用，格式可以不同；但**漫游私钥的封装格式**（PBKDF2-SHA256 20 万次 + AES-256-GCM 随机 nonce）存在服务端、要跨端解封，必须一致。
+本地密钥库只在本机用，格式可以不同（原生客户端用随机本机密钥加密整个库，本机密钥交给系统安全存储：Windows DPAPI / 安卓 Keystore，所以启动不用输口令）；但**漫游私钥的封装格式**（PBKDF2-SHA256 20 万次 + AES-256-GCM 随机 nonce）存在服务端、要跨端解封，必须一致。
 
 ## 通知
 

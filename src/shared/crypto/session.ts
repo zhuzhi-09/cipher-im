@@ -249,7 +249,14 @@ export class SessionManager {
       rec.peerIkDhPub = body.ikDhPub;
     }
 
-    const pt = await ratchetDecrypt(rec.state, body.header as RatchetHeader, fromB64(body.ct));
+    // 新建的链路解密失败要整条撤掉，不能留下一条坏链路
+    let pt: Uint8Array;
+    try {
+      pt = await ratchetDecrypt(rec.state, body.header as RatchetHeader, fromB64(body.ct));
+    } catch (e) {
+      if (created) p.records.splice(p.records.indexOf(rec), 1);
+      throw e;
+    }
     p.current = rec.id;
     p.lastUsed[rec.id] = Date.now();
     this.confirmPeer(fromUser, fromDevice);

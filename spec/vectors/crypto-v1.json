@@ -1,0 +1,1768 @@
+{
+ "version": 1,
+ "generatedBy": "src/tests/vectors/export.ts",
+ "rng": "block(i) = SHA-256(utf8(\"CipherIM-test-rng-v1|\" + label) || u32be(i))；按顺序流式取字节，余下的留给下次。每段数据注明它用的 label",
+ "encoding": "primitives 段是 hex；其余是标准 base64（带 = 填充），与线协议一致",
+ "primitives": {
+  "sha256": [
+   {
+    "in": "",
+    "out": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+   },
+   {
+    "in": "616263",
+    "out": "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad"
+   },
+   {
+    "in": "436970686572494d20e7abafe588b0e7abaf",
+    "out": "e30f4a3f9d36fcaa81d9f78fe0b8b89bcbe37b8e79c00645399f37943ba080d4"
+   },
+   {
+    "in": "db76128f4da0202d6440f59a5b72b7cd2f20a3a6ca3071a1072c6105ed8f2f10a4d23c34756663108291555a836c463b5495c75ee8c1383d810b0e0ce6605b69e4f5fc142a79b58affb63140d9ae1bfe72720de76523998e7c536bf7ab392ec9d4ffbd36924ddfe0c994dc0ae396f256b503bc0b7eef1d2045531cf6bd4e21bc4bdb05e6a0e50573b44f737eada6960f05d2f00a3ffca92b475613ba86b415deba47b40150171b52da181cf0f947a9f20ff2d1ee68c3846c561ba2ea509746b69d520c5740c6f1e7",
+    "out": "96deac83d39bfe981ce437e06a39f334e53dbe03aa6687945efa441c3d59437e"
+   }
+  ],
+  "hkdf": [
+   {
+    "ikm": "732f8a7b19a74036c88dc6c6ccd19ff5744b5e503a25c6af1e715402c41f554d",
+    "salt": "0000000000000000000000000000000000000000000000000000000000000000",
+    "info": "CipherIM-X3DH-v1",
+    "len": 32,
+    "out": "e14ccaeb0e59bae064b02e2e68a3795e5cf8c8df05e3e40cb4315488cb92735f"
+   },
+   {
+    "ikm": "79770d3f41f1ac062e2c8e4ab26ef511256bfb7ae2d7916009e6e41090eaffbd",
+    "salt": "2c1cfda7e8fdfba72c532098e7925ea31a8445bd31f118760000d69a0f3651bc",
+    "info": "CipherIM-RK-v1",
+    "len": 64,
+    "out": "bdd3470577f20cd36d029e60115102b4f03d88b1001c4240336523aabddfad5deb0e5925b7085febb6be47ee042037850a1772badbf8386447f7fd7621508e00"
+   },
+   {
+    "ikm": "77def02f777fd7e1028a98b6e7a362222e9dbcedfaa2ff2022b3bbb0bc8e2f6a",
+    "salt": "de458f7ade54098d017ba763173c9b59e0232e9008fff510dd48553f83bb5643",
+    "info": "CipherIM-roam-v1",
+    "len": 32,
+    "out": "7d90c48d3f782c5270c7491cf91a92a84f1633a469c5194f680bb1b8077d37f9"
+   }
+  ],
+  "hmac": [
+   {
+    "key": "4d52c982f14b171162930b67f6f032d227ac9bac94bb0dbc684dd7ffbba2ccfa",
+    "data": "01",
+    "out": "f1b0b203399a78f8b98c5002101147a05bd76d429ca1cf27f439c0cb64016abf"
+   },
+   {
+    "key": "9603ac7447b2bec75da158e239313f8b6085957823255164a80b1de9aae2489d",
+    "data": "02",
+    "out": "63dc0628e8ce266a27e554ced3d7b7e9ecfca90595d160400948bd83d634f495"
+   },
+   {
+    "key": "7ad9581b91eeca17c6c751896db668bed779c9a118c3e516165a86c7183038c0",
+    "data": "2b52ac52a93cadb18ceb8cad0dc8fe7fcf381a045053f3daab2c3b189e70bb727046f2354c0483824c36b81270f5cbd63be7",
+    "out": "bd4125feb471616c09993bddd2941e7bfe6ff2a3243dee2f6941ff32d97c1529"
+   }
+  ],
+  "x25519": [
+   {
+    "priv": "fcd49cc9f0968b4d439396fc057db93f806295dae113b07f4e2cd9cc731d7952",
+    "pub": "2c479db414aae915632e1141b88c77c92b26ff70d8efd8f178b05e3dc182206a",
+    "peerPub": "646bff481e8614ad487a086a447e8630f57dba60d039006507891756c7703918",
+    "shared": "f3343356081d012ba9306ca592fb88d2a8b52a64ce37a55373ee540102e8dc1a"
+   },
+   {
+    "priv": "9f4a6448cc58266e1afa9fbd11045ba84141fad2a840b5b5a2431e0832b725f2",
+    "pub": "d51a41a3f3e93c6fcf5d6b58e402ee495822d7091c819b41a1b2bc95522f7668",
+    "peerPub": "9eda67a973f11e2ed950038f6b07a63e0b430a0fb930fd43fa6d385b8b161a72",
+    "shared": "33ef29c86698765708b7992f0326d1bf7cdd1cd8d43d67861bc94e906a96f64a"
+   },
+   {
+    "priv": "564a4f8821410b182d56c400b0afd875100618e106c51bd2db0099f9cff67c57",
+    "pub": "cd31b6592919070535a832b363fcf7c5e424e08ced0ad65359c41c9598251143",
+    "peerPub": "a536e0a402ebdf341c6d541b9175394776d6cb45c149209e33bf6337fc60f624",
+    "shared": "1e29acae17d8c94084bacb87dffefe6fe03135d0764f395d6b5f52058f250b7c"
+   }
+  ],
+  "ed25519": [
+   {
+    "seed": "db62ac6be2969bfc2dfa6dacc7c3a983c6155ed23c6c5d3f6b5c52c1e3d98f84",
+    "pub": "338f9ee75f72d3f7fdadcd2b8879697fafa2e79eb010d3070bca2af4f99188eb",
+    "msg": "",
+    "sig": "a12d73957a8e0b10355ea49632714c14f7cc5d23540e93c343330c1dbb72dde5e0344b158225f0ab6c57fab8249a25980434ed875fbdcad8f690f70cbe49a90c"
+   },
+   {
+    "seed": "3dda973fab4697b12042f7bb3ccee9ac615368f8055fd0eedb145e8f60645a72",
+    "pub": "27d643b35a1c512020efdaa0704c4c5ebefc0131d406a84d593c558d112fd983",
+    "msg": "436970686572494d2d53504b2d7631",
+    "sig": "e18e5448beca20534876b58b3a2f01cd3077ef53f7f5ac0934c4f6086795d4222de81f6a1c202a40d9b6e6cd704568e16e64364d8a9db1b576bac6c537ca0704"
+   },
+   {
+    "seed": "589e637b77854ac201ba11c580cd3acfd6b4aeeb93683e8a3fb5c2b40d960feb",
+    "pub": "1609393e7c166619e1e73980dd441a8f46363ed6802d8969ea06847ea83226ed",
+    "msg": "00088a53c39beacb66533c344eeceedcd823e0414182f929d94933bd07683a2230d45005baef2b75d076328b464801d0d7513e0f65c82027b79df1623271320b4b5def5a6ba6864d3c7bfbf995",
+    "sig": "2ac9ddd9dec5a436ba4e9e3937d304762bc46974c5730c4189176288aa584aa49449f348bb38e391a8a84faf8f7703037d71d49b0967c784e463a5e48f700b08"
+   }
+  ],
+  "aead": [
+   {
+    "key": "92c776308c30b852238665fa4357d09f80b81641ea908299bf7b3e4b41d08299",
+    "nonce": "c4f0a92b1507f5c335fc58f0",
+    "pt": "",
+    "aad": "",
+    "ct": "256712e0bd74639c4130bf9908c9ee16"
+   },
+   {
+    "key": "67f7c5e7654759c3d4c8cda679fb9ecc50dc55199b228b2f709f00a5fd1db186",
+    "nonce": "9124542b3a2f607f463249d5",
+    "pt": "7b2274223a2274657874222c2274657874223a22e4bda0e5a5bd227d",
+    "aad": "a4f032aabc7f681a65a1481bed3f73d1f8785400a39bfcea3cfe215a7eb8602b325a18731c5086e46e4497e5b8dde6f75d96e453be4795cc6f8b23ca62ec6dd11f5bf679b3bf",
+    "ct": "f23889d98b2913b681374113f1ae388344a813e04cb5ccf308da0a6c7e656152f8649cb31fe889331be69070"
+   },
+   {
+    "key": "f2f9d419062321353a184df53f5018d26eee684ed5100aa9b400437c866fb572",
+    "nonce": "8446b9ea7780a05e8221aa70",
+    "pt": "321766cc7f37611bc6d125278d0ee91e9a2e5acc39587792b908fd54c0ff26a2e8ee14ba3dd6603da76af3c4b9a0cbe48bc4ba654eccb25d78dc10cad9bc7fb073d24924285b3295033f984e56f4213d63ebb6759d636d6201382fa237470af23e5ff765656d291949af808aeefe149883d553b71052a7ef137e5854d23d0d60d14b12ba6a0d4c8032574bd125aacc455142204852f2f114d7a68bf7fe25a980ec24e647e2027f8ac696c806ad1507a91a231ac0ff9db6a7b3d61e31f64e9beb13261f24e937964c5e5b162b19a2638bfa0afd283a283a5d1157907140f13d91ec69c22f40f84199d2655b1950bf9008557c2650b3c0c725012c18371617de6d6ca503de1626b68a894fffe4443a24f2079d493cf7d214059917a27f6e31c4c46781a481fdd755826bfcf57bfbca9e8d0e2a60712b5913dc691bb0a3003b4dd54165da6abad44a51237b1820cb8d454577879e6821a847c2a9e1e1e593ddf69682534ded54b0eb170f9bdd42f3d4de406e9847db1b4762f4d53055c3c273396b779fa70325c3d2fec753ae876bf2981a174c0f0008f05a364547912ee3db846e151ea66f9cfc23ea7d9cba718ef07a42396b0a8abfc3d2e0348b3a0efbeedb5785402788352ed531f5ca5942a25018b0975056f3fa9393a82155c201296343b78d01031d6e512c659b9ff79b3213f29873efebf1ddef651cf8080df5773a51df6abf1434d7e4ed3836c80c0f9f1e001653e7ab1f0e20f0470d8ff573de60f193510e85a951ef7a67e70e1e385234317851158c99ede5e836e2e754e5306908fe1c1e0a35e81c1b5f9a8053b2ebdbaf8eda91eeebfad9e6fa8a02286e69fa36d4350b56caa8b08838b19da90fc7153f61fe434106f2a4ff00bf4609f0c0e221acf47a6ab874dd56d325642b813ebb0a040bd918845c80191806458930622c47eacf84f1f90a27540b8d87188e1e72a6f65b8e81c9179393cb1efbb090483fab23131fcedd04e4b0b767df0365b1f928aeb652129f5f4db4b46127b5fa915e1655afbd1f644ee3aed67fbc5539791cd7c0e82d35534004aab12ab9c61df0d5acbf7886637cad71831698cfb01191dba0caaae860651658bd6a51d5073b1371c5e7d55e4e3ad32a9032c73e7babef7d921b5fe832799eaa8c05057cc4ba0881f108f510025aae7d90657601586d9c5b90806394e7248fda67a6aa1ec36f17055b8773173778a2bef3808b70d452faf9aa19fb4f6de23291efe57ae61cc5b326052074e257d6c2b528591700f5ef8fde821d72782157a539aee1e399e17786baa6f7ef2572899d3a00b4f73609ca974bb6127a18f9821998b6f69ab5924758c1b33d195b1b619b1eca3616f14b590e8d0a1cefd7bea6be3cfed06885ea391ef101c0e86ce6f22a5c85a4",
+    "aad": "626c6f62",
+    "ct": "7e8bff69aacbf52e7e37267ab631827313b9c7e9949d77f45d80f502d6bf9e767be2a58041d4ee32fd9d86da91cee592c869876e0cc213e1c44ee05d86abaeb96f36b09a424795edd4750a0fa09be53453a207fd9f95fcdc19556576395fbeefb51d1c64b388560f14239d6545401265c426b1ccb5444c70643b0be8e0a9c5977f087bab189e536f897c9948b994a10a0e0ecc1f2afb8144ed29ce7f43f57b04476d4d421ca01a246ebe93382010e6cbe2ee21148326bfff2dc4d574e0d508e2eeb5a60e617aa908498bf30d635d345094cd220bc377350c4d7823d3f6735d1da70f11da19fdcac5a55abcbdca50ffa2d8ad422adc8bb5041539cd179de4c96725fb9822fb09ed605bb75549b6d6eea3044a7bec6f31e5d8470961b2ea1faa3ce09348575091c420d091c31af2095274a9eaf5bf5f09cb4f0f0cac23fadd1200cb417bd8a6fef85c9d1a40bdcf9425e1d2c5dd492dcb9d34f6c79a36fc665713a5f41bb0464fc22efd608326790334f10264ea3ab374fe3feb7e89ab477c807a269f36ea53ee192b0099e148fad122324aa5d9be4d8534d0ae6feda9cead7ac2514e5b6f30a862d7ed1eb71b912fde85cfc7f20d5b2c0677aaad135341713ce47bc4ef68af94de673c5274ccbf7491ba319371a40891e8a1c185c4a4754732c8b13644d2f4ef0d89b17a7a2ccd6f5ac871f3ff237d1679650f387d66abcf6678b806e24e525ea81aacc22c9187c65e90ecc58b5c4e13c458e11b2020ed286ca6570e1d25599d8d429a51a69e523f986e2693862eb3bc38d7960089c5e9128dda8073e7aec1d549ef1e4a5825faedf168d8994147ce166236528f4bd9943037afcc587c5ad91e5c048d07a2fc0a717540b7dfda955fcfd41449039c9a0816b10bb54af4940411045a9fca014943e6e452eb0e6411fa8685be5ee31e414884728a5df36d12f67b679db7dd217b30ff4f968b4b2695446fbf8a40990b56b045a5ecbbb8e856a1d7a18a1916942389332b69cca35958cd56b7da6ee1474d138b2bb96a6abfc773e8d117669f77bd72e6f63f2391425e75a7e7a9b0a6ae15c35b8a64546af6422c653ba84002edbcb5627a20e0988d98411dfeac014103a40a5fb7d49fbed81a84bfa885aa7ba24d41643dcccf1d783614986da1ebc194bc017d152415305b6f1ebb59e13dffed3158817ea4d8bdda807521e942aff5869da292caef07643c52014fd754f02fea7ed0289ff89c44d41fc615b426d7c2ddfe152adc2663345ed6966ad466e3470082a1995537529e7d6f62a4d77c542301f75973c79deb6b851d45f207bc1d5849b84f745dcd2aa9cddc8ad243cb13b1ce99c1221d78c07b7fa12076ca0da518bb4a7161b69d80d90794ef937f71ea37991ac5b606c98910db6e85480d1806273d7ecd77557fba8e17ae552dc433"
+   }
+  ],
+  "aeadRandom": [
+   {
+    "rng": "aeadRandom-0",
+    "key": "ab5e2d85a4c9efd64dfe12e47914639ee52cb366a899f0f058e949b78a39fb77",
+    "pt": "7661756c74",
+    "aad": "436970686572494d2d726f616d2d6b65792d7631",
+    "packed": "e9b0cf7bab8cb4bcac1422a570aa2dbe07e23ee48ed9c40b7e9186274e90485b5c"
+   },
+   {
+    "rng": "aeadRandom-1",
+    "key": "8e519fd432bd75b5e7d780c791b7fa3af3416a59dc2eb041141ff9b7fa54d46a",
+    "pt": "aaded6c4db49e7d1da1d76c5429d3355b926d86a05168f57c6835e88c266b6499b",
+    "aad": "436970686572494d2d726f616d2d6b65792d7631",
+    "packed": "2fc5a8c8112024dd3451fa190b8f57a89a3616301efcca6528547fec9aea02527630951074b15de0312957a39bbc27d5f139d0743220ef785fd808ec78"
+   }
+  ],
+  "pbkdf2": [
+   {
+    "password": "password",
+    "salt": "340190925e43fb052f9b88fb25388dcd72d1492787189b9cca36cd8020fdb3c8",
+    "iterations": 1000,
+    "out": "83e6f04515bdceda526917eafe4236e6da79767573d7bbfd8df4d20b2433eef4"
+   },
+   {
+    "password": "口令 with 空格",
+    "salt": "a67a105e0b105294badfa19051d444975782e77b69d63ef76f780d17d2fbd134",
+    "iterations": 1000,
+    "out": "cf00b614a107ae97b26a8ff897591b403c06ab03ff0fc55a9a7ee46791919743"
+   },
+   {
+    "password": "correct horse battery staple",
+    "salt": "4cbbf81052e0fb38deaa7792ce2224b407705b960aadedf0fe941d58050c107a",
+    "iterations": 200000,
+    "out": "b196ba5deef4e6ee854f3cfb66c6d48f6988c824f3987ac4118e2a047fa71314"
+   }
+  ],
+  "base64": [
+   {
+    "hex": "",
+    "b64": ""
+   },
+   {
+    "hex": "39",
+    "b64": "OQ=="
+   },
+   {
+    "hex": "80bd",
+    "b64": "gL0="
+   },
+   {
+    "hex": "8187c8",
+    "b64": "gYfI"
+   },
+   {
+    "hex": "93ab609b",
+    "b64": "k6tgmw=="
+   },
+   {
+    "hex": "5937238bc2",
+    "b64": "WTcji8I="
+   },
+   {
+    "hex": "001934a24b7bcc9e883c0a7108a700f825a66cba876afa4bade570516face4",
+    "b64": "ABk0okt7zJ6IPApxCKcA+CWmbLqHavpLreVwUW+s5A=="
+   },
+   {
+    "hex": "bac05d872b605b46f7bdbe231af452f25a7bd8478ca7081aaef359b19aa49cfd",
+    "b64": "usBdhytgW0b3vb4jGvRS8lp72EeMpwgarvNZsZqknP0="
+   },
+   {
+    "hex": "a07922f1b5760fb913cbbdc39d6ef232665121516d76568d3c9dd081e2cbd65e8c",
+    "b64": "oHki8bV2D7kTy73DnW7yMmZRIVFtdlaNPJ3QgeLL1l6M"
+   }
+  ]
+ },
+ "identity": [
+  {
+   "rng": "identity-a",
+   "opkCount": 2,
+   "keys": {
+    "identity": {
+     "sigSeed": "Zf9MtsfChXCLNi+MPfUYQQb4OWHeMNhAsCxUnDxjYEM=",
+     "dhPriv": "yTtIy0VFKQzROdjlRGoYpjpJNwnv36nx2j1fknwRM0k=",
+     "ikSigPub": "9v7ByOYKmTIXt+h4+nmuD95vXh0DEMnXugFP2pMiIk8=",
+     "ikDhPub": "S3PU/mtKc/f61D5WbBTUz+1ZGVukcQwDivb4jELNAnY="
+    },
+    "spk": {
+     "id": "kjJYMDI0",
+     "priv": "og3ZZr2ZjL33K40GMQPCJ5vWf3yNv+Gmb3XDmnsC0e0=",
+     "pub": "jpCUV/o1Iobj0/uqdblxAV4npncXM0e6xD3S68Gdphs=",
+     "sig": "qJdJlfNZo7CAc9hZ453QxCgVFa/QvPnrgJAIMy76fM9KaZDvRkGlXwyarI18DtVuG/iOJfMTN6Hdn4uQjzy8Ag=="
+    },
+    "opks": [
+     {
+      "id": "vR138VQ+",
+      "priv": "iSJJChSnUr3JggxdwOPdgi8Usf+MrND1/aAJ/Bhtzrg=",
+      "pub": "LVYwpbeSv4tf5ndw9ZCiGt0S8ZN9ZW95tZzh67qxAVg="
+     },
+     {
+      "id": "1THCvo8K",
+      "priv": "8s3OXp+i4lfdif73/+iSNsG/PNmWVETO4l/adRo/9+A=",
+      "pub": "ML36xUSXtOK41lQh7KsEbxmzOOgZB2E3YIpAOHnb0RQ="
+     }
+    ]
+   }
+  },
+  {
+   "rng": "identity-b",
+   "opkCount": 0,
+   "keys": {
+    "identity": {
+     "sigSeed": "j/3n37J2pBvAsfSWZwh+mQnqA3YNeUDmePO6Dn9TmUc=",
+     "dhPriv": "iywVAw+y9W6782rptLKC//t/wruCVeLaF2vsbBP4ico=",
+     "ikSigPub": "sz63j1jQbD1PVQ3singh9FqfK+9ZLDsqXAd0xqNbDDM=",
+     "ikDhPub": "HF3qRziwKbwkYd64Ybm6CqekE1D6E75P9EU895wRqVk="
+    },
+    "spk": {
+     "id": "Qdphbho4",
+     "priv": "iYTeZ6Lrf5hSjFUUFY1h+52/Uog30xf7Jg01NvlWzAs=",
+     "pub": "wSuzj+ASBhBAGe/P7EXYnCpQyK2EjiZc5dQqOEg5ewE=",
+     "sig": "aQ4lcI2g1R9QuOa1BwjHf8xkMxgpWmgGI1WnViGi7wuBAkOMjT2lYjZ7bgjXZu8Xg7Lj1tsYHL6MZ+WhqmShAQ=="
+    },
+    "opks": []
+   }
+  },
+  {
+   "rng": "identity-only",
+   "identityOnly": {
+    "sigSeed": "RjQglHdU47guXSL0ysyesz2Vfa5BxmsjeHtrVvrPpxc=",
+    "dhPriv": "pvxg2gdag+qsmUo+4NLCoI5VabljL/8lXk1GuUFnPqc=",
+    "ikSigPub": "TOciLDCLKiqFGZOnuXjZzYz0sc93IeJ5yun0TNvsQfQ=",
+    "ikDhPub": "92rt+vr9yrbvGFq9AdsWj7FL6OfGwl8D+sHmvN3NG1o="
+   }
+  }
+ ],
+ "fingerprint": {
+  "safety": [
+   {
+    "a": "aRHQw+gaa+vCPzCXujv9NoZVaNktz7wi4lPhBTH6kGc=",
+    "b": "frfgELxixQ7RIhXAK2+6jtJ7AfeGAXabcYZdKFGjiME=",
+    "digits": "575151437466685187952292809203491041144906457015378496357971"
+   },
+   {
+    "a": "j/A8SDHxwplV0engVMWJRDM+E6vr6JvUTztz7xQD8T0=",
+    "b": "aRHQw+gaa+vCPzCXujv9NoZVaNktz7wi4lPhBTH6kGc=",
+    "digits": "502669879500323497560380719499941212787375704061217191223055"
+   }
+  ],
+  "short": [
+   {
+    "ikSigPub": "aRHQw+gaa+vCPzCXujv9NoZVaNktz7wi4lPhBTH6kGc=",
+    "out": "EB30E459"
+   },
+   {
+    "ikSigPub": "frfgELxixQ7RIhXAK2+6jtJ7AfeGAXabcYZdKFGjiME=",
+    "out": "9C647383"
+   },
+   {
+    "ikSigPub": "j/A8SDHxwplV0engVMWJRDM+E6vr6JvUTztz7xQD8T0=",
+    "out": "0A5D385E"
+   }
+  ]
+ },
+ "parties": {
+  "alice": {
+   "user": "alice",
+   "device": "dev-alice",
+   "keys": {
+    "identity": {
+     "sigSeed": "UKQgyuwE+YMASpvhISCzDeMX+PHK2Q49ECuk1AGFFQQ=",
+     "dhPriv": "T4Z9V5hxGt5pkdxOWl1DuHLD3v/FkhHYFmEPZ8OK3Hw=",
+     "ikSigPub": "aRHQw+gaa+vCPzCXujv9NoZVaNktz7wi4lPhBTH6kGc=",
+     "ikDhPub": "rcsI/8jJmbjg60gKPeInP1Wd6Agc5Gn9V22cUeddNC4="
+    },
+    "spk": {
+     "id": "NHmRwk6c",
+     "priv": "RRsM5owOU72DQ0Kfzk2cmcsjmDhdboEoKIAlvudtcbQ=",
+     "pub": "Mnp6H6dMdqgBmnMJUrz+BlaRCX6PNVsvt7BWRDR8yQc=",
+     "sig": "4rGpf4u3oUdw6DyivhsNwsP8hyB63qqUekQZDxNLor3lHrRTxUxtOCNx/xxwhCck5aX7McD5TQsCrmVVPFaHCA=="
+    },
+    "opks": [
+     {
+      "id": "P1XfiyzZ",
+      "priv": "6hFZMBfJTXw/Vo1HsVp5tEaJTSnRwQXmMMflrvms+GQ=",
+      "pub": "WRJtq09H5kXTYibS0dnddcKarMme0dV1/qPTgSXL1GI="
+     },
+     {
+      "id": "9Q5tMZOD",
+      "priv": "ITN3rCJ3JtA6sjfgVRUE9dJRTdd7ugCw+5QYJYh33MI=",
+      "pub": "FNQ+nurO+whbnJFM/7fRo1Lfn/h/jbNRgbg4FJTNZmk="
+     },
+     {
+      "id": "mjtvs/i8",
+      "priv": "XHg+mh6Y7V/VgK19LFmjz19EdSwi3Q3sgIuL98A/LyQ=",
+      "pub": "CyT8nsoANm3qxRpfwyQwkmPZT8PwNhdX+8u92RNugBg="
+     }
+    ]
+   }
+  },
+  "bob": {
+   "user": "bob",
+   "device": "dev-bob",
+   "keys": {
+    "identity": {
+     "sigSeed": "tOkSP4YyIte8NHeHte8fj3GMIrmAyxHQ2dePx4ZxtDQ=",
+     "dhPriv": "JCOSBtBr/8CcWcEUP/SY41lBLygknX0kJ1pyBGo3Ats=",
+     "ikSigPub": "frfgELxixQ7RIhXAK2+6jtJ7AfeGAXabcYZdKFGjiME=",
+     "ikDhPub": "iI4ubEzL+f6h/xYC8k6gW2p4ejZ24gPM0Bi/FE3cN3A="
+    },
+    "spk": {
+     "id": "/GszJQD2",
+     "priv": "OfhtRwyju8DDSyQ2nG3PA6oe4yEtZHbB5RgpiQ29O5E=",
+     "pub": "isieCx2YB5zBemw19msoymFTAz+sSENQNverehwrigo=",
+     "sig": "Xrkg6ebpDfQbjm9QhLRicdHYDpD62QoExZDGE+gw9IRqLF9oK3Rkc+h7v6GqecgRWlt6e15HmZhgL84bQfUgBg=="
+    },
+    "opks": [
+     {
+      "id": "jWGQ2Qd0",
+      "priv": "hFzl+sUKSd5CNpuRmqmhDF7omy58PtBcOpmMQRvvC7U=",
+      "pub": "W3SVRcYGYJi8+/Iq9Ddv7IltGx9XoR+wjNAIraPmskE="
+     },
+     {
+      "id": "B7GG2SZk",
+      "priv": "WHcFLRBRU+5jehP5767lKu/kEL0OtIGXVzeK5XlDRgM=",
+      "pub": "TB4fqP7seLKkaBFIXM3dtBSh/ce/4xuZreHY6bFeDQ8="
+     },
+     {
+      "id": "EvPnvERY",
+      "priv": "eL+5kRevSv3/fnf44oGhvhioFWH/TA24oTum5JP46dY=",
+      "pub": "gjxuVvBpRWht62PC8K567ois/oLLOVg3AzdcpXBmSDg="
+     }
+    ]
+   }
+  },
+  "carol": {
+   "user": "carol",
+   "device": "dev-carol",
+   "keys": {
+    "identity": {
+     "sigSeed": "Mf7VZw70C3vrg7ofcf+9CEy6QZGwzoNHhSDyY+M0deM=",
+     "dhPriv": "44aA3CHKpIbFCp+bYj+fc27aiwmlLitr699x69ut6Uk=",
+     "ikSigPub": "j/A8SDHxwplV0engVMWJRDM+E6vr6JvUTztz7xQD8T0=",
+     "ikDhPub": "TuPNJ6DZOxjCiYkHYYZWnRZYWA7zcuKMGcJH8gFm3Cg="
+    },
+    "spk": {
+     "id": "ieN8aSBJ",
+     "priv": "MHDcP1bSEE7eV/XYXJ17Qq0tNmt6tQmQjZOjEXuLzOk=",
+     "pub": "NJwnUrqtc/EB30vRDSuVEqAAwF4gp5EZa4RkiNW3fFg=",
+     "sig": "6MKmUahotEs3ln1XyuepMTZTCLTUbTvvFkBZnvBrZhx/jldXDz+5kbbdw6UUsaUOutugtNG57MEcxAn/FQRSCA=="
+    },
+    "opks": [
+     {
+      "id": "QvJlc4Mo",
+      "priv": "Y3sGtocIpvGbKgqVB0D0hzy8bRGYFgevmlKr2mOJ9Wk=",
+      "pub": "uopt68eIHbcYvxS1X29tPXuvfHhm4st+ndN+byz3ClU="
+     },
+     {
+      "id": "SAagZB0K",
+      "priv": "cXOVSuYmuCccvVaZerVUru1gzgb7QgH/gzwzLqQoH7Y=",
+      "pub": "hQ8S6qjeRk1BR4N+h8Lfyv3W9qyAoz8TxpZ3RWB19X0="
+     },
+     {
+      "id": "h+5mb757",
+      "priv": "VX+bpj1fasv7geMjWbcnU7Zl/M3+y6RmJd6aHDUa748=",
+      "pub": "fcrYKASKM1Tc7CzEU5qDB4ko7FEtmsFbG3ybUCVDa1A="
+     }
+    ]
+   }
+  }
+ },
+ "x3dh": [
+  {
+   "name": "with-opk",
+   "rng": "x3dh-with-opk",
+   "initiator": "alice",
+   "responder": "bob",
+   "bundle": {
+    "ikSigPub": "frfgELxixQ7RIhXAK2+6jtJ7AfeGAXabcYZdKFGjiME=",
+    "ikDhPub": "iI4ubEzL+f6h/xYC8k6gW2p4ejZ24gPM0Bi/FE3cN3A=",
+    "spkId": "/GszJQD2",
+    "spkPub": "isieCx2YB5zBemw19msoymFTAz+sSENQNverehwrigo=",
+    "spkSig": "Xrkg6ebpDfQbjm9QhLRicdHYDpD62QoExZDGE+gw9IRqLF9oK3Rkc+h7v6GqecgRWlt6e15HmZhgL84bQfUgBg==",
+    "opks": [
+     {
+      "id": "jWGQ2Qd0",
+      "pub": "W3SVRcYGYJi8+/Iq9Ddv7IltGx9XoR+wjNAIraPmskE="
+     }
+    ]
+   },
+   "out": {
+    "sk": "XTzffnq7pfP7v0kkPtCNGgrkAsGlg1FC3FVHNGZMnE8=",
+    "ad": "rcsI/8jJmbjg60gKPeInP1Wd6Agc5Gn9V22cUeddNC6Iji5sTMv5/qH/FgLyTqBbanh6NnbiA8zQGL8UTdw3cA==",
+    "ekPriv": "I9HKJFOooRBBSGeHFdFUBwMLOPh6qyN/K1D2kjfqQp8=",
+    "ekPub": "TA3VBoflI62WYfSIXTGd15GSTCjMXEOLD0sx9Zpux04=",
+    "spkId": "/GszJQD2",
+    "opkId": "jWGQ2Qd0"
+   }
+  },
+  {
+   "name": "without-opk",
+   "rng": "x3dh-without-opk",
+   "initiator": "alice",
+   "responder": "bob",
+   "bundle": {
+    "ikSigPub": "frfgELxixQ7RIhXAK2+6jtJ7AfeGAXabcYZdKFGjiME=",
+    "ikDhPub": "iI4ubEzL+f6h/xYC8k6gW2p4ejZ24gPM0Bi/FE3cN3A=",
+    "spkId": "/GszJQD2",
+    "spkPub": "isieCx2YB5zBemw19msoymFTAz+sSENQNverehwrigo=",
+    "spkSig": "Xrkg6ebpDfQbjm9QhLRicdHYDpD62QoExZDGE+gw9IRqLF9oK3Rkc+h7v6GqecgRWlt6e15HmZhgL84bQfUgBg==",
+    "opks": []
+   },
+   "out": {
+    "sk": "7sOR81RceIRjQe9FpSP+cdPBfSzO0WH4V4rjLurPhxE=",
+    "ad": "rcsI/8jJmbjg60gKPeInP1Wd6Agc5Gn9V22cUeddNC6Iji5sTMv5/qH/FgLyTqBbanh6NnbiA8zQGL8UTdw3cA==",
+    "ekPriv": "pFRFOhmvoLWE0ftMwDh6Prxmb4P7yDT+OExSF7etp7o=",
+    "ekPub": "f3x0i4WOIqVyPI49U/gbeZa4yXRAzMJ6cmntmn0rrS4=",
+    "spkId": "/GszJQD2",
+    "opkId": null
+   }
+  },
+  {
+   "name": "bad-signature",
+   "rng": "x3dh-bad",
+   "initiator": "alice",
+   "responder": "bob",
+   "bundle": {
+    "ikSigPub": "frfgELxixQ7RIhXAK2+6jtJ7AfeGAXabcYZdKFGjiME=",
+    "ikDhPub": "iI4ubEzL+f6h/xYC8k6gW2p4ejZ24gPM0Bi/FE3cN3A=",
+    "spkId": "/GszJQD2",
+    "spkPub": "isieCx2YB5zBemw19msoymFTAz+sSENQNverehwrigo=",
+    "spkSig": "X7kg6ebpDfQbjm9QhLRicdHYDpD62QoExZDGE+gw9IRqLF9oK3Rkc+h7v6GqecgRWlt6e15HmZhgL84bQfUgBg==",
+    "opks": [
+     {
+      "id": "jWGQ2Qd0",
+      "pub": "W3SVRcYGYJi8+/Iq9Ddv7IltGx9XoR+wjNAIraPmskE="
+     }
+    ]
+   },
+   "out": {
+    "error": true
+   }
+  }
+ ],
+ "transcript": [
+  {
+   "op": "encrypt",
+   "actor": "alice",
+   "targets": [
+    {
+     "user": "bob",
+     "device": "dev-bob"
+    }
+   ],
+   "bundles": {
+    "bob/dev-bob": {
+     "ikSigPub": "frfgELxixQ7RIhXAK2+6jtJ7AfeGAXabcYZdKFGjiME=",
+     "ikDhPub": "iI4ubEzL+f6h/xYC8k6gW2p4ejZ24gPM0Bi/FE3cN3A=",
+     "spkId": "/GszJQD2",
+     "spkPub": "isieCx2YB5zBemw19msoymFTAz+sSENQNverehwrigo=",
+     "spkSig": "Xrkg6ebpDfQbjm9QhLRicdHYDpD62QoExZDGE+gw9IRqLF9oK3Rkc+h7v6GqecgRWlt6e15HmZhgL84bQfUgBg==",
+     "opks": [
+      {
+       "id": "jWGQ2Qd0",
+       "pub": "W3SVRcYGYJi8+/Iq9Ddv7IltGx9XoR+wjNAIraPmskE="
+      }
+     ]
+    }
+   },
+   "payloadJson": "{\"t\":\"text\",\"text\":\"你好 Bob\"}",
+   "rng": "step-0",
+   "note": "alice 首次给 bob 发消息：建会话（带 OPK）+ 预密钥信封",
+   "expect": {
+    "bodies": [
+     {
+      "user": "bob",
+      "device": "dev-bob",
+      "body": {
+       "kind": "prekey",
+       "ikSigPub": "aRHQw+gaa+vCPzCXujv9NoZVaNktz7wi4lPhBTH6kGc=",
+       "ikDhPub": "rcsI/8jJmbjg60gKPeInP1Wd6Agc5Gn9V22cUeddNC4=",
+       "ekPub": "AOKh4sKcu3COtL+XqJMRRN9P5wf+jaB0JaOFe845YiU=",
+       "spkId": "/GszJQD2",
+       "opkId": "jWGQ2Qd0",
+       "header": {
+        "dh": "Ih1Mdv56lI4qr0fsBS171qwBScDk4iAlaVdc/xQ5ByE=",
+        "pn": 0,
+        "n": 0
+       },
+       "ct": "gqS3cZe/0QmZdw9D1di1RlshO/FEUCrd8cs7s4K9H8R1McPuGCuB5IBp3GjcGkAh"
+      }
+     }
+    ],
+    "skipped": []
+   }
+  },
+  {
+   "op": "encrypt",
+   "actor": "alice",
+   "targets": [
+    {
+     "user": "bob",
+     "device": "dev-bob"
+    }
+   ],
+   "bundles": {},
+   "payloadJson": "{\"t\":\"text\",\"text\":\"第二条，带个 emoji 🔐\"}",
+   "rng": "step-1",
+   "note": "bob 回复之前 alice 再发一条：仍然是预密钥信封",
+   "expect": {
+    "bodies": [
+     {
+      "user": "bob",
+      "device": "dev-bob",
+      "body": {
+       "kind": "prekey",
+       "ikSigPub": "aRHQw+gaa+vCPzCXujv9NoZVaNktz7wi4lPhBTH6kGc=",
+       "ikDhPub": "rcsI/8jJmbjg60gKPeInP1Wd6Agc5Gn9V22cUeddNC4=",
+       "ekPub": "AOKh4sKcu3COtL+XqJMRRN9P5wf+jaB0JaOFe845YiU=",
+       "spkId": "/GszJQD2",
+       "opkId": "jWGQ2Qd0",
+       "header": {
+        "dh": "Ih1Mdv56lI4qr0fsBS171qwBScDk4iAlaVdc/xQ5ByE=",
+        "pn": 0,
+        "n": 1
+       },
+       "ct": "dNgyxviVq8UrZnEBlBMoS5ulLbWI3ZW+da6rxRaIjIfL/Rc2Wpqkuf4PSmQQXL2C+N31n3KPM2psoWUNyyelXIlGHw=="
+      }
+     }
+    ],
+    "skipped": []
+   }
+  },
+  {
+   "op": "decrypt",
+   "actor": "bob",
+   "from": {
+    "user": "alice",
+    "device": "dev-alice"
+   },
+   "body": {
+    "kind": "prekey",
+    "ikSigPub": "aRHQw+gaa+vCPzCXujv9NoZVaNktz7wi4lPhBTH6kGc=",
+    "ikDhPub": "rcsI/8jJmbjg60gKPeInP1Wd6Agc5Gn9V22cUeddNC4=",
+    "ekPub": "AOKh4sKcu3COtL+XqJMRRN9P5wf+jaB0JaOFe845YiU=",
+    "spkId": "/GszJQD2",
+    "opkId": "jWGQ2Qd0",
+    "header": {
+     "dh": "Ih1Mdv56lI4qr0fsBS171qwBScDk4iAlaVdc/xQ5ByE=",
+     "pn": 0,
+     "n": 1
+    },
+    "ct": "dNgyxviVq8UrZnEBlBMoS5ulLbWI3ZW+da6rxRaIjIfL/Rc2Wpqkuf4PSmQQXL2C+N31n3KPM2psoWUNyyelXIlGHw=="
+   },
+   "rng": "step-2",
+   "note": "bob 先收到第二条（乱序）：新建会话并跳过第一条的密钥",
+   "expect": {
+    "payloadJson": "{\"t\":\"text\",\"text\":\"第二条，带个 emoji 🔐\"}",
+    "created": true,
+    "usedOpk": "jWGQ2Qd0"
+   }
+  },
+  {
+   "op": "decrypt",
+   "actor": "bob",
+   "from": {
+    "user": "alice",
+    "device": "dev-alice"
+   },
+   "body": {
+    "kind": "prekey",
+    "ikSigPub": "aRHQw+gaa+vCPzCXujv9NoZVaNktz7wi4lPhBTH6kGc=",
+    "ikDhPub": "rcsI/8jJmbjg60gKPeInP1Wd6Agc5Gn9V22cUeddNC4=",
+    "ekPub": "AOKh4sKcu3COtL+XqJMRRN9P5wf+jaB0JaOFe845YiU=",
+    "spkId": "/GszJQD2",
+    "opkId": "jWGQ2Qd0",
+    "header": {
+     "dh": "Ih1Mdv56lI4qr0fsBS171qwBScDk4iAlaVdc/xQ5ByE=",
+     "pn": 0,
+     "n": 0
+    },
+    "ct": "gqS3cZe/0QmZdw9D1di1RlshO/FEUCrd8cs7s4K9H8R1McPuGCuB5IBp3GjcGkAh"
+   },
+   "rng": "step-3",
+   "note": "bob 再收到第一条：在已有链路上用暂存的跳过密钥解开",
+   "expect": {
+    "payloadJson": "{\"t\":\"text\",\"text\":\"你好 Bob\"}",
+    "created": false,
+    "usedOpk": "jWGQ2Qd0"
+   }
+  },
+  {
+   "op": "decrypt",
+   "actor": "bob",
+   "from": {
+    "user": "alice",
+    "device": "dev-alice"
+   },
+   "body": {
+    "kind": "prekey",
+    "ikSigPub": "aRHQw+gaa+vCPzCXujv9NoZVaNktz7wi4lPhBTH6kGc=",
+    "ikDhPub": "rcsI/8jJmbjg60gKPeInP1Wd6Agc5Gn9V22cUeddNC4=",
+    "ekPub": "AOKh4sKcu3COtL+XqJMRRN9P5wf+jaB0JaOFe845YiU=",
+    "spkId": "/GszJQD2",
+    "opkId": "jWGQ2Qd0",
+    "header": {
+     "dh": "Ih1Mdv56lI4qr0fsBS171qwBScDk4iAlaVdc/xQ5ByE=",
+     "pn": 0,
+     "n": 0
+    },
+    "ct": "gqS3cZe/0QmZdw9D1di1RlshO/FEUCrd8cs7s4K9H8R1McPuGCuB5IBp3GjcGkAh"
+   },
+   "rng": "step-4",
+   "note": "同一条再收一次：密钥已用掉，必须失败",
+   "expect": {
+    "error": true
+   }
+  },
+  {
+   "op": "encrypt",
+   "actor": "bob",
+   "targets": [
+    {
+     "user": "alice",
+     "device": "dev-alice"
+    }
+   ],
+   "bundles": {},
+   "payloadJson": "{\"t\":\"text\",\"text\":\"收到\"}",
+   "rng": "step-5",
+   "note": "bob 回复：普通信封，bob 这边触发过 DH 棘轮",
+   "expect": {
+    "bodies": [
+     {
+      "user": "alice",
+      "device": "dev-alice",
+      "body": {
+       "kind": "msg",
+       "header": {
+        "dh": "+LczRr0Ibd38xjKh1xBAxNC+5VXHE2sorfUtjXwxXXE=",
+        "pn": 0,
+        "n": 0
+       },
+       "ct": "xI+jPgbvHbjJRZD2m2Wc+wps0o70pakgLqftwbfjAph2IsQ7OTeRhvWeKho="
+      }
+     }
+    ],
+    "skipped": []
+   }
+  },
+  {
+   "op": "decrypt",
+   "actor": "alice",
+   "from": {
+    "user": "bob",
+    "device": "dev-bob"
+   },
+   "body": {
+    "kind": "msg",
+    "header": {
+     "dh": "+LczRr0Ibd38xjKh1xBAxNC+5VXHE2sorfUtjXwxXXE=",
+     "pn": 0,
+     "n": 0
+    },
+    "ct": "xI+jPgbvHbjJRZD2m2Wc+wps0o70pakgLqftwbfjAph2IsQ7OTeRhvWeKho="
+   },
+   "rng": "step-6",
+   "note": "alice 收到回复：确认链路，之后不再用预密钥信封",
+   "expect": {
+    "payloadJson": "{\"t\":\"text\",\"text\":\"收到\"}",
+    "created": false,
+    "usedOpk": null
+   }
+  },
+  {
+   "op": "encrypt",
+   "actor": "alice",
+   "targets": [
+    {
+     "user": "bob",
+     "device": "dev-bob"
+    }
+   ],
+   "bundles": {},
+   "payloadJson": "{\"t\":\"text\",\"text\":\"第三条\"}",
+   "rng": "step-7",
+   "note": "alice 再发：普通信封",
+   "expect": {
+    "bodies": [
+     {
+      "user": "bob",
+      "device": "dev-bob",
+      "body": {
+       "kind": "msg",
+       "header": {
+        "dh": "15r5U3/Z+N8tr2+1DdWyIc4RjeupsgTawQGo81S8Ng8=",
+        "pn": 2,
+        "n": 0
+       },
+       "ct": "Az56O1Z7SVJfdhrLzcQC4J2K0MR4U0tID5Fy+8LPCTQ7fKQGAJmCDAobK/EH3js="
+      }
+     }
+    ],
+    "skipped": []
+   }
+  },
+  {
+   "op": "decrypt",
+   "actor": "bob",
+   "from": {
+    "user": "alice",
+    "device": "dev-alice"
+   },
+   "body": {
+    "kind": "msg",
+    "header": {
+     "dh": "15r5U3/Z+N8tr2+1DdWyIc4RjeupsgTawQGo81S8Ng8=",
+     "pn": 2,
+     "n": 0
+    },
+    "ct": "Az56O1Z7SVJfdhrLzcQC4J2K0MR4U0tID5Fy+8LPCTQ7fKQGAJmCDAobK/EH3js="
+   },
+   "rng": "step-8",
+   "note": "bob 收到",
+   "expect": {
+    "payloadJson": "{\"t\":\"text\",\"text\":\"第三条\"}",
+    "created": false,
+    "usedOpk": null
+   }
+  },
+  {
+   "op": "encrypt",
+   "actor": "bob",
+   "targets": [
+    {
+     "user": "alice",
+     "device": "dev-alice"
+    }
+   ],
+   "bundles": {},
+   "payloadJson": "{\"t\":\"text\",\"text\":\"a\"}",
+   "rng": "step-9",
+   "note": "bob 连发两条之一",
+   "expect": {
+    "bodies": [
+     {
+      "user": "alice",
+      "device": "dev-alice",
+      "body": {
+       "kind": "msg",
+       "header": {
+        "dh": "TOX0m0Eync92uQ79XZUGqzoDm2YcWLWNBZi84sXBzRQ=",
+        "pn": 1,
+        "n": 0
+       },
+       "ct": "oTCBWp3mG3SRmQXoeMOK260q2ou3KQ8yAjUhUCbGZ9EUKwwhlWdN"
+      }
+     }
+    ],
+    "skipped": []
+   }
+  },
+  {
+   "op": "encrypt",
+   "actor": "bob",
+   "targets": [
+    {
+     "user": "alice",
+     "device": "dev-alice"
+    }
+   ],
+   "bundles": {},
+   "payloadJson": "{\"t\":\"system\",\"text\":\"换行\\n引号\\\"反斜杠\\\\\"}",
+   "rng": "step-10",
+   "note": "bob 连发两条之二",
+   "expect": {
+    "bodies": [
+     {
+      "user": "alice",
+      "device": "dev-alice",
+      "body": {
+       "kind": "msg",
+       "header": {
+        "dh": "TOX0m0Eync92uQ79XZUGqzoDm2YcWLWNBZi84sXBzRQ=",
+        "pn": 1,
+        "n": 1
+       },
+       "ct": "9BTA4PD752NLcl/XBdxtucuL+DlgPAx6/6RjN586/LgFrx0DXkhn+dGGRf8og7LbGyzilrwdHE/S2bXOp7vkS1KDUQ=="
+      }
+     }
+    ],
+    "skipped": []
+   }
+  },
+  {
+   "op": "decrypt",
+   "actor": "alice",
+   "from": {
+    "user": "bob",
+    "device": "dev-bob"
+   },
+   "body": {
+    "kind": "msg",
+    "header": {
+     "dh": "TOX0m0Eync92uQ79XZUGqzoDm2YcWLWNBZi84sXBzRQ=",
+     "pn": 1,
+     "n": 1
+    },
+    "ct": "9BTA4PD752NLcl/XBdxtucuL+DlgPAx6/6RjN586/LgFrx0DXkhn+dGGRf8og7LbGyzilrwdHE/S2bXOp7vkS1KDUQ=="
+   },
+   "rng": "step-11",
+   "note": "alice 先收第二条",
+   "expect": {
+    "payloadJson": "{\"t\":\"system\",\"text\":\"换行\\n引号\\\"反斜杠\\\\\"}",
+    "created": false,
+    "usedOpk": null
+   }
+  },
+  {
+   "op": "decrypt",
+   "actor": "alice",
+   "from": {
+    "user": "bob",
+    "device": "dev-bob"
+   },
+   "body": {
+    "kind": "msg",
+    "header": {
+     "dh": "TOX0m0Eync92uQ79XZUGqzoDm2YcWLWNBZi84sXBzRQ=",
+     "pn": 1,
+     "n": 0
+    },
+    "ct": "oTCBWp3mG3SRmQXoeMOK260q2ou3KQ8yAjUhUCbGZ9EUKwwhlWdN"
+   },
+   "rng": "step-12",
+   "note": "alice 再收第一条（跳过密钥）",
+   "expect": {
+    "payloadJson": "{\"t\":\"text\",\"text\":\"a\"}",
+    "created": false,
+    "usedOpk": null
+   }
+  },
+  {
+   "op": "encrypt",
+   "actor": "carol",
+   "targets": [
+    {
+     "user": "bob",
+     "device": "dev-bob"
+    }
+   ],
+   "bundles": {
+    "bob/dev-bob": {
+     "ikSigPub": "frfgELxixQ7RIhXAK2+6jtJ7AfeGAXabcYZdKFGjiME=",
+     "ikDhPub": "iI4ubEzL+f6h/xYC8k6gW2p4ejZ24gPM0Bi/FE3cN3A=",
+     "spkId": "/GszJQD2",
+     "spkPub": "isieCx2YB5zBemw19msoymFTAz+sSENQNverehwrigo=",
+     "spkSig": "Xrkg6ebpDfQbjm9QhLRicdHYDpD62QoExZDGE+gw9IRqLF9oK3Rkc+h7v6GqecgRWlt6e15HmZhgL84bQfUgBg==",
+     "opks": []
+    }
+   },
+   "payloadJson": "{\"t\":\"text\",\"text\":\"我是 carol\"}",
+   "rng": "step-13",
+   "note": "carol 给 bob 发首条（预密钥包里没有 OPK）",
+   "expect": {
+    "bodies": [
+     {
+      "user": "bob",
+      "device": "dev-bob",
+      "body": {
+       "kind": "prekey",
+       "ikSigPub": "j/A8SDHxwplV0engVMWJRDM+E6vr6JvUTztz7xQD8T0=",
+       "ikDhPub": "TuPNJ6DZOxjCiYkHYYZWnRZYWA7zcuKMGcJH8gFm3Cg=",
+       "ekPub": "LvXnv1XA8ugew2isF0icJjWaGrCEHcxEixsJepM7KDY=",
+       "spkId": "/GszJQD2",
+       "opkId": null,
+       "header": {
+        "dh": "upABUZsKCFan4/rz8Tm7UZLOdHT/T/8WysuATxVHd10=",
+        "pn": 0,
+        "n": 0
+       },
+       "ct": "3F7/E9BhzSIj4Q2aVYQcma7wR9syQHDKdo3f2lWdTWHSWrfvQGESs6TMFDVIXLFsK3k="
+      }
+     }
+    ],
+    "skipped": []
+   }
+  },
+  {
+   "op": "encrypt",
+   "actor": "bob",
+   "targets": [
+    {
+     "user": "carol",
+     "device": "dev-carol"
+    }
+   ],
+   "bundles": {
+    "carol/dev-carol": {
+     "ikSigPub": "j/A8SDHxwplV0engVMWJRDM+E6vr6JvUTztz7xQD8T0=",
+     "ikDhPub": "TuPNJ6DZOxjCiYkHYYZWnRZYWA7zcuKMGcJH8gFm3Cg=",
+     "spkId": "ieN8aSBJ",
+     "spkPub": "NJwnUrqtc/EB30vRDSuVEqAAwF4gp5EZa4RkiNW3fFg=",
+     "spkSig": "6MKmUahotEs3ln1XyuepMTZTCLTUbTvvFkBZnvBrZhx/jldXDz+5kbbdw6UUsaUOutugtNG57MEcxAn/FQRSCA==",
+     "opks": [
+      {
+       "id": "QvJlc4Mo",
+       "pub": "uopt68eIHbcYvxS1X29tPXuvfHhm4st+ndN+byz3ClU="
+      }
+     ]
+    }
+   },
+   "payloadJson": "{\"t\":\"text\",\"text\":\"我是 bob\"}",
+   "rng": "step-14",
+   "note": "bob 同时给 carol 发首条",
+   "expect": {
+    "bodies": [
+     {
+      "user": "carol",
+      "device": "dev-carol",
+      "body": {
+       "kind": "prekey",
+       "ikSigPub": "frfgELxixQ7RIhXAK2+6jtJ7AfeGAXabcYZdKFGjiME=",
+       "ikDhPub": "iI4ubEzL+f6h/xYC8k6gW2p4ejZ24gPM0Bi/FE3cN3A=",
+       "ekPub": "8GccYNTheYHJ6W7T3KVqm/wUN03f7tbg2SYX+12ECXw=",
+       "spkId": "ieN8aSBJ",
+       "opkId": "QvJlc4Mo",
+       "header": {
+        "dh": "4UKb45qcfPKaskQh3E2Ng0PHHxDRJGkufhdNfOq5h0U=",
+        "pn": 0,
+        "n": 0
+       },
+       "ct": "v4VqzDWRP0j73XD3kONtU8j1j8at5zNztW1kPg2rVjvEILvf3z1YGe8zv4fHHs9Z"
+      }
+     }
+    ],
+    "skipped": []
+   }
+  },
+  {
+   "op": "decrypt",
+   "actor": "bob",
+   "from": {
+    "user": "carol",
+    "device": "dev-carol"
+   },
+   "body": {
+    "kind": "prekey",
+    "ikSigPub": "j/A8SDHxwplV0engVMWJRDM+E6vr6JvUTztz7xQD8T0=",
+    "ikDhPub": "TuPNJ6DZOxjCiYkHYYZWnRZYWA7zcuKMGcJH8gFm3Cg=",
+    "ekPub": "LvXnv1XA8ugew2isF0icJjWaGrCEHcxEixsJepM7KDY=",
+    "spkId": "/GszJQD2",
+    "opkId": null,
+    "header": {
+     "dh": "upABUZsKCFan4/rz8Tm7UZLOdHT/T/8WysuATxVHd10=",
+     "pn": 0,
+     "n": 0
+    },
+    "ct": "3F7/E9BhzSIj4Q2aVYQcma7wR9syQHDKdo3f2lWdTWHSWrfvQGESs6TMFDVIXLFsK3k="
+   },
+   "rng": "step-15",
+   "note": "bob 收到 carol 的首条：同一对端现在有两条链路",
+   "expect": {
+    "payloadJson": "{\"t\":\"text\",\"text\":\"我是 carol\"}",
+    "created": true,
+    "usedOpk": null
+   }
+  },
+  {
+   "op": "decrypt",
+   "actor": "carol",
+   "from": {
+    "user": "bob",
+    "device": "dev-bob"
+   },
+   "body": {
+    "kind": "prekey",
+    "ikSigPub": "frfgELxixQ7RIhXAK2+6jtJ7AfeGAXabcYZdKFGjiME=",
+    "ikDhPub": "iI4ubEzL+f6h/xYC8k6gW2p4ejZ24gPM0Bi/FE3cN3A=",
+    "ekPub": "8GccYNTheYHJ6W7T3KVqm/wUN03f7tbg2SYX+12ECXw=",
+    "spkId": "ieN8aSBJ",
+    "opkId": "QvJlc4Mo",
+    "header": {
+     "dh": "4UKb45qcfPKaskQh3E2Ng0PHHxDRJGkufhdNfOq5h0U=",
+     "pn": 0,
+     "n": 0
+    },
+    "ct": "v4VqzDWRP0j73XD3kONtU8j1j8at5zNztW1kPg2rVjvEILvf3z1YGe8zv4fHHs9Z"
+   },
+   "rng": "step-16",
+   "note": "carol 收到 bob 的首条",
+   "expect": {
+    "payloadJson": "{\"t\":\"text\",\"text\":\"我是 bob\"}",
+    "created": true,
+    "usedOpk": "QvJlc4Mo"
+   }
+  },
+  {
+   "op": "encrypt",
+   "actor": "carol",
+   "targets": [
+    {
+     "user": "bob",
+     "device": "dev-bob"
+    }
+   ],
+   "bundles": {},
+   "payloadJson": "{\"t\":\"text\",\"text\":\"收到你的了\"}",
+   "rng": "step-17",
+   "note": "carol 再发：用最近解密成功的那条链路",
+   "expect": {
+    "bodies": [
+     {
+      "user": "bob",
+      "device": "dev-bob",
+      "body": {
+       "kind": "msg",
+       "header": {
+        "dh": "ewEjatG9yIfT68mxcbI8vtdVinC27JEaDYj97CV8fx4=",
+        "pn": 0,
+        "n": 0
+       },
+       "ct": "OT79zHiXFweYfZtLNpeGnaCkra0GLRjM8SJNFWbKx9hSFdF8tqwvjssms7woP37tL94ghPA="
+      }
+     }
+    ],
+    "skipped": []
+   }
+  },
+  {
+   "op": "decrypt",
+   "actor": "bob",
+   "from": {
+    "user": "carol",
+    "device": "dev-carol"
+   },
+   "body": {
+    "kind": "msg",
+    "header": {
+     "dh": "ewEjatG9yIfT68mxcbI8vtdVinC27JEaDYj97CV8fx4=",
+     "pn": 0,
+     "n": 0
+    },
+    "ct": "OT79zHiXFweYfZtLNpeGnaCkra0GLRjM8SJNFWbKx9hSFdF8tqwvjssms7woP37tL94ghPA="
+   },
+   "rng": "step-18",
+   "note": "bob 收到：按最近使用顺序逐条尝试",
+   "expect": {
+    "payloadJson": "{\"t\":\"text\",\"text\":\"收到你的了\"}",
+    "created": false,
+    "usedOpk": null
+   }
+  },
+  {
+   "op": "encrypt",
+   "actor": "bob",
+   "targets": [
+    {
+     "user": "carol",
+     "device": "dev-carol"
+    }
+   ],
+   "bundles": {},
+   "payloadJson": "{\"t\":\"text\",\"text\":\"好的\"}",
+   "rng": "step-19",
+   "note": "bob 再发",
+   "expect": {
+    "bodies": [
+     {
+      "user": "carol",
+      "device": "dev-carol",
+      "body": {
+       "kind": "msg",
+       "header": {
+        "dh": "tbDEsvTMzwvxYkf48yC/LusnNi1AFVPHVTXDzTQNels=",
+        "pn": 1,
+        "n": 0
+       },
+       "ct": "AhLmLHenXP9B7rpexGyhhvAkrEOeXFReIZkYtS2xfcAratl9rPmVmLWx/zQ="
+      }
+     }
+    ],
+    "skipped": []
+   }
+  },
+  {
+   "op": "decrypt",
+   "actor": "carol",
+   "from": {
+    "user": "bob",
+    "device": "dev-bob"
+   },
+   "body": {
+    "kind": "msg",
+    "header": {
+     "dh": "tbDEsvTMzwvxYkf48yC/LusnNi1AFVPHVTXDzTQNels=",
+     "pn": 1,
+     "n": 0
+    },
+    "ct": "AhLmLHenXP9B7rpexGyhhvAkrEOeXFReIZkYtS2xfcAratl9rPmVmLWx/zQ="
+   },
+   "rng": "step-20",
+   "note": "carol 收到",
+   "expect": {
+    "payloadJson": "{\"t\":\"text\",\"text\":\"好的\"}",
+    "created": false,
+    "usedOpk": null
+   }
+  },
+  {
+   "op": "encrypt",
+   "actor": "alice",
+   "targets": [
+    {
+     "user": "bob",
+     "device": "dev-bob"
+    },
+    {
+     "user": "carol",
+     "device": "dev-carol"
+    },
+    {
+     "user": "dave",
+     "device": "dev-dave"
+    },
+    {
+     "user": "alice",
+     "device": "dev-alice"
+    }
+   ],
+   "bundles": {
+    "carol/dev-carol": {
+     "ikSigPub": "j/A8SDHxwplV0engVMWJRDM+E6vr6JvUTztz7xQD8T0=",
+     "ikDhPub": "TuPNJ6DZOxjCiYkHYYZWnRZYWA7zcuKMGcJH8gFm3Cg=",
+     "spkId": "ieN8aSBJ",
+     "spkPub": "NJwnUrqtc/EB30vRDSuVEqAAwF4gp5EZa4RkiNW3fFg=",
+     "spkSig": "6MKmUahotEs3ln1XyuepMTZTCLTUbTvvFkBZnvBrZhx/jldXDz+5kbbdw6UUsaUOutugtNG57MEcxAn/FQRSCA==",
+     "opks": [
+      {
+       "id": "SAagZB0K",
+       "pub": "hQ8S6qjeRk1BR4N+h8Lfyv3W9qyAoz8TxpZ3RWB19X0="
+      }
+     ]
+    }
+   },
+   "payloadJson": "{\"t\":\"file\",\"blobId\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"name\":\"报告.pdf\",\"size\":12345,\"mime\":\"application/pdf\",\"key\":\"BwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwc=\"}",
+   "rng": "step-21",
+   "note": "alice 同时发给 bob（已有会话）、carol（新建，用她的第二枚 OPK）、dave（没有预密钥包 → 跳过）",
+   "expect": {
+    "bodies": [
+     {
+      "user": "bob",
+      "device": "dev-bob",
+      "body": {
+       "kind": "msg",
+       "header": {
+        "dh": "zvME3jSkaKqOxjg4Mof8tKS+3S7ONP4YGvA3Ffk9gSQ=",
+        "pn": 1,
+        "n": 0
+       },
+       "ct": "9aHqH9/z1ZcKbpj1M+U0CQtIlRdij5VwQqUz6bz5sDdp9v8TJ/Pw3WtPTfy6exWDPRXBnC7rQjSc1obIyu6NWXeglJqEOr49s3cQNtBBFN5GA2tX/JfOs4ZljSCOx16dd81tiwpShA0DmOMR3VdfV2oLDkZj2f/6K7SGd5Awimz1Jy2/UPYNaKJmGxy4eZnHjRxcXkECTvjeb8Kvmn5i62J5fgJ9aqSacJItkg5kY3PBcFLHbqrP"
+      }
+     },
+     {
+      "user": "carol",
+      "device": "dev-carol",
+      "body": {
+       "kind": "prekey",
+       "ikSigPub": "aRHQw+gaa+vCPzCXujv9NoZVaNktz7wi4lPhBTH6kGc=",
+       "ikDhPub": "rcsI/8jJmbjg60gKPeInP1Wd6Agc5Gn9V22cUeddNC4=",
+       "ekPub": "LTi96wD32aVjoGGXY10P9s5KbZ8sxjc7ksbttOFzt2c=",
+       "spkId": "ieN8aSBJ",
+       "opkId": "SAagZB0K",
+       "header": {
+        "dh": "lG+p/rhXVupHNm+1amdBYu6Zracc9IHHuQhBX7ktow0=",
+        "pn": 0,
+        "n": 0
+       },
+       "ct": "K7W9X+foiDs+qKTX8XI6fSinakr/fmm7Sjf+IoV5838V8v/V05xDkL89f3a8gXu82++k4PGZbHZCOPiUCXffWr9Cpn9xW7pXPt2rcxmBZEKs145064jIjK+IdJsMUZaGzeM3leEuuvuqQOzKij0X6X3FNQChpL2gdVjGCnt3mvCjlC4pchL7fCpdy/o4gAa0l9yp4jJJi3ARndml41HVISL8BF3b4+mBBgpsnr54fVoYt+Oan+sV"
+      }
+     }
+    ],
+    "skipped": [
+     {
+      "user": "dave",
+      "device": "dev-dave"
+     }
+    ]
+   }
+  },
+  {
+   "op": "distributeSenderKey",
+   "actor": "alice",
+   "groupId": "group-42",
+   "targets": [
+    {
+     "user": "bob",
+     "device": "dev-bob"
+    }
+   ],
+   "bundles": {},
+   "rng": "step-22",
+   "note": "alice 把自己的群密钥分发给 bob",
+   "expect": {
+    "bodies": [
+     {
+      "user": "bob",
+      "device": "dev-bob",
+      "body": {
+       "kind": "msg",
+       "header": {
+        "dh": "zvME3jSkaKqOxjg4Mof8tKS+3S7ONP4YGvA3Ffk9gSQ=",
+        "pn": 1,
+        "n": 1
+       },
+       "ct": "lbZVXFFs0uVwZKsS9fINCmrcVoPa+jz8I2i5Lm/H3bGFuglxsiFHqngdE15IrK4opXDgwRCj/dwR2W5OWmYFLAMRW2FrFfr2vh9hpNEfI0AEAJPkl9dEAmb7yv0ZweWkB6i2xVzWgkoFfJSdIfI0RXbrdGPTDXc8IBC6J2D+otHftvB7svdny4/Utk+T0+5UMGjK9wmA8f9kD23wTuXXe47e+imjCiZmrYP0sWXDzxsWW+bKnC2JMabJeqe6aqBduZiyAAKt4g=="
+      }
+     }
+    ],
+    "skipped": []
+   }
+  },
+  {
+   "op": "decrypt",
+   "actor": "bob",
+   "from": {
+    "user": "alice",
+    "device": "dev-alice"
+   },
+   "body": {
+    "kind": "msg",
+    "header": {
+     "dh": "zvME3jSkaKqOxjg4Mof8tKS+3S7ONP4YGvA3Ffk9gSQ=",
+     "pn": 1,
+     "n": 1
+    },
+    "ct": "lbZVXFFs0uVwZKsS9fINCmrcVoPa+jz8I2i5Lm/H3bGFuglxsiFHqngdE15IrK4opXDgwRCj/dwR2W5OWmYFLAMRW2FrFfr2vh9hpNEfI0AEAJPkl9dEAmb7yv0ZweWkB6i2xVzWgkoFfJSdIfI0RXbrdGPTDXc8IBC6J2D+otHftvB7svdny4/Utk+T0+5UMGjK9wmA8f9kD23wTuXXe47e+imjCiZmrYP0sWXDzxsWW+bKnC2JMabJeqe6aqBduZiyAAKt4g=="
+   },
+   "rng": "step-23",
+   "note": "bob 收到 skdm：载荷类型 skdm，并存下 alice 的群密钥",
+   "expect": {
+    "payloadJson": "{\"t\":\"skdm\",\"dist\":{\"groupId\":\"group-42\",\"ownerUser\":\"alice\",\"ownerDevice\":\"dev-alice\",\"keyId\":\"E9bGT2yx1U4=\",\"chainKey\":\"1oUj9TDUOATdvXBKi8n3rV+UxLVRk4vyAbDL0kkWwBs=\",\"iteration\":0}}",
+    "created": false,
+    "usedOpk": null
+   }
+  },
+  {
+   "op": "encryptGroup",
+   "actor": "alice",
+   "groupId": "group-42",
+   "payloadJson": "{\"t\":\"text\",\"text\":\"群里第一条\"}",
+   "rng": "step-24",
+   "note": "alice 群消息 #0",
+   "expect": {
+    "body": {
+     "kind": "group",
+     "groupId": "group-42",
+     "ownerUser": "alice",
+     "ownerDevice": "dev-alice",
+     "keyId": "E9bGT2yx1U4=",
+     "iteration": 0,
+     "ct": "fepD0ZWyEGE7X7CJsuDpBgef0c90McR4B47rzmeNRZmrGsvIxFL/vV9IRRUFJ2qB1EpXF3M="
+    }
+   }
+  },
+  {
+   "op": "encryptGroup",
+   "actor": "alice",
+   "groupId": "group-42",
+   "payloadJson": "{\"t\":\"text\",\"text\":\"群里第二条\"}",
+   "rng": "step-25",
+   "note": "alice 群消息 #1",
+   "expect": {
+    "body": {
+     "kind": "group",
+     "groupId": "group-42",
+     "ownerUser": "alice",
+     "ownerDevice": "dev-alice",
+     "keyId": "E9bGT2yx1U4=",
+     "iteration": 1,
+     "ct": "u1ix+LqnMwraKidiUm3ktkVu0iyshmQPA08a7dX/C9jWLySHigylnOMgGqmJ/ox+wX4uCTw="
+    }
+   }
+  },
+  {
+   "op": "encryptGroup",
+   "actor": "alice",
+   "groupId": "group-42",
+   "payloadJson": "{\"t\":\"text\",\"text\":\"群里第三条\"}",
+   "rng": "step-26",
+   "note": "alice 群消息 #2",
+   "expect": {
+    "body": {
+     "kind": "group",
+     "groupId": "group-42",
+     "ownerUser": "alice",
+     "ownerDevice": "dev-alice",
+     "keyId": "E9bGT2yx1U4=",
+     "iteration": 2,
+     "ct": "DrKIOHpLdYGXIZlybj8EMrDJ49A7XYDX0PMoABW/RnfNMGvl0EZ1BgzoobVhkp6NLA1m7iw="
+    }
+   }
+  },
+  {
+   "op": "decryptGroup",
+   "actor": "bob",
+   "body": {
+    "kind": "group",
+    "groupId": "group-42",
+    "ownerUser": "alice",
+    "ownerDevice": "dev-alice",
+    "keyId": "E9bGT2yx1U4=",
+    "iteration": 0,
+    "ct": "fepD0ZWyEGE7X7CJsuDpBgef0c90McR4B47rzmeNRZmrGsvIxFL/vV9IRRUFJ2qB1EpXF3M="
+   },
+   "rng": "step-27",
+   "note": "bob 解 #0",
+   "expect": {
+    "payloadJson": "{\"t\":\"text\",\"text\":\"群里第一条\"}"
+   }
+  },
+  {
+   "op": "decryptGroup",
+   "actor": "bob",
+   "body": {
+    "kind": "group",
+    "groupId": "group-42",
+    "ownerUser": "alice",
+    "ownerDevice": "dev-alice",
+    "keyId": "E9bGT2yx1U4=",
+    "iteration": 2,
+    "ct": "DrKIOHpLdYGXIZlybj8EMrDJ49A7XYDX0PMoABW/RnfNMGvl0EZ1BgzoobVhkp6NLA1m7iw="
+   },
+   "rng": "step-28",
+   "note": "bob 跳过 #1 直接解 #2（链往前推）",
+   "expect": {
+    "payloadJson": "{\"t\":\"text\",\"text\":\"群里第三条\"}"
+   }
+  },
+  {
+   "op": "decryptGroup",
+   "actor": "bob",
+   "body": {
+    "kind": "group",
+    "groupId": "group-42",
+    "ownerUser": "alice",
+    "ownerDevice": "dev-alice",
+    "keyId": "E9bGT2yx1U4=",
+    "iteration": 1,
+    "ct": "u1ix+LqnMwraKidiUm3ktkVu0iyshmQPA08a7dX/C9jWLySHigylnOMgGqmJ/ox+wX4uCTw="
+   },
+   "rng": "step-29",
+   "note": "bob 再解 #1：v1 不支持群内乱序，必须失败",
+   "expect": {
+    "error": true
+   }
+  },
+  {
+   "op": "rotateSenderKey",
+   "actor": "alice",
+   "groupId": "group-42",
+   "rng": "step-30",
+   "note": "成员变动：alice 轮换群密钥",
+   "expect": {}
+  },
+  {
+   "op": "encryptGroup",
+   "actor": "alice",
+   "groupId": "group-42",
+   "payloadJson": "{\"t\":\"text\",\"text\":\"轮换后\"}",
+   "rng": "step-31",
+   "note": "轮换后 alice 先发了群消息（新密钥的分发还没送出，真实场景里分发要先联网取预密钥包）",
+   "expect": {
+    "body": {
+     "kind": "group",
+     "groupId": "group-42",
+     "ownerUser": "alice",
+     "ownerDevice": "dev-alice",
+     "keyId": "9rB0yEEOOMk=",
+     "iteration": 0,
+     "ct": "r4dvKOWMGAfwq8+EUNvogrJ9P5hVHJBrcF6CbXUwD9ek80zmLDoaQmf3mDRkTr8="
+    }
+   }
+  },
+  {
+   "op": "decryptGroup",
+   "actor": "bob",
+   "body": {
+    "kind": "group",
+    "groupId": "group-42",
+    "ownerUser": "alice",
+    "ownerDevice": "dev-alice",
+    "keyId": "9rB0yEEOOMk=",
+    "iteration": 0,
+    "ct": "r4dvKOWMGAfwq8+EUNvogrJ9P5hVHJBrcF6CbXUwD9ek80zmLDoaQmf3mDRkTr8="
+   },
+   "rng": "step-32",
+   "note": "bob 还没收到新密钥：必须失败",
+   "expect": {
+    "error": true
+   }
+  },
+  {
+   "op": "distributeSenderKey",
+   "actor": "alice",
+   "groupId": "group-42",
+   "targets": [
+    {
+     "user": "bob",
+     "device": "dev-bob"
+    }
+   ],
+   "bundles": {},
+   "rng": "step-33",
+   "note": "alice 分发新密钥：发的是密钥创建时的初始状态（iteration 0），不是当前状态",
+   "expect": {
+    "bodies": [
+     {
+      "user": "bob",
+      "device": "dev-bob",
+      "body": {
+       "kind": "msg",
+       "header": {
+        "dh": "zvME3jSkaKqOxjg4Mof8tKS+3S7ONP4YGvA3Ffk9gSQ=",
+        "pn": 1,
+        "n": 2
+       },
+       "ct": "YjNT9wa72Ktw8Yz3epHo3OCEaH5Um7pom36xwmZYiGd2tD/5dMODrnYwFmHciZOTbnUfsj3vh4IWwsH+ozQp6ILOwU4qis/Pami9ZpXroUFQE/Ub18qEIRTqx2NctTJf+5IdiudHR/p+5Z/oud5ehWsOgm04nJIp3oKl9o/UpDsSsLok4aM1A8QUboJr6p+SN4O1kmD+jCuS8wYJU4FpdMZLElXLU/YFW7ZWbtq816a6gbYIcBGcfvqdYQo/gCWKR1MEn5eH+Q=="
+      }
+     }
+    ],
+    "skipped": []
+   }
+  },
+  {
+   "op": "decrypt",
+   "actor": "bob",
+   "from": {
+    "user": "alice",
+    "device": "dev-alice"
+   },
+   "body": {
+    "kind": "msg",
+    "header": {
+     "dh": "zvME3jSkaKqOxjg4Mof8tKS+3S7ONP4YGvA3Ffk9gSQ=",
+     "pn": 1,
+     "n": 2
+    },
+    "ct": "YjNT9wa72Ktw8Yz3epHo3OCEaH5Um7pom36xwmZYiGd2tD/5dMODrnYwFmHciZOTbnUfsj3vh4IWwsH+ozQp6ILOwU4qis/Pami9ZpXroUFQE/Ub18qEIRTqx2NctTJf+5IdiudHR/p+5Z/oud5ehWsOgm04nJIp3oKl9o/UpDsSsLok4aM1A8QUboJr6p+SN4O1kmD+jCuS8wYJU4FpdMZLElXLU/YFW7ZWbtq816a6gbYIcBGcfvqdYQo/gCWKR1MEn5eH+Q=="
+   },
+   "rng": "step-34",
+   "note": "bob 收到新 skdm",
+   "expect": {
+    "payloadJson": "{\"t\":\"skdm\",\"dist\":{\"groupId\":\"group-42\",\"ownerUser\":\"alice\",\"ownerDevice\":\"dev-alice\",\"keyId\":\"9rB0yEEOOMk=\",\"chainKey\":\"Fy2DdGtSJ8U0qI5FHRADP48q2nqL2+spOQgpHqofICg=\",\"iteration\":0}}",
+    "created": false,
+    "usedOpk": null
+   }
+  },
+  {
+   "op": "decryptGroup",
+   "actor": "bob",
+   "body": {
+    "kind": "group",
+    "groupId": "group-42",
+    "ownerUser": "alice",
+    "ownerDevice": "dev-alice",
+    "keyId": "9rB0yEEOOMk=",
+    "iteration": 0,
+    "ct": "r4dvKOWMGAfwq8+EUNvogrJ9P5hVHJBrcF6CbXUwD9ek80zmLDoaQmf3mDRkTr8="
+   },
+   "rng": "step-35",
+   "note": "bob 能解开分发之前发出的那条",
+   "expect": {
+    "payloadJson": "{\"t\":\"text\",\"text\":\"轮换后\"}"
+   }
+  },
+  {
+   "op": "distributeSenderKey",
+   "actor": "alice",
+   "groupId": "group-42",
+   "targets": [
+    {
+     "user": "bob",
+     "device": "dev-bob"
+    }
+   ],
+   "bundles": {},
+   "rng": "step-36",
+   "note": "alice 又分发了一次同一把密钥（例如重新进群时补发）",
+   "expect": {
+    "bodies": [
+     {
+      "user": "bob",
+      "device": "dev-bob",
+      "body": {
+       "kind": "msg",
+       "header": {
+        "dh": "zvME3jSkaKqOxjg4Mof8tKS+3S7ONP4YGvA3Ffk9gSQ=",
+        "pn": 1,
+        "n": 3
+       },
+       "ct": "bwstOF8n+jO+iGOo5jHpSN3ZVh6wQU8kDXRdhtUKeNYlQgGvuYqZ6xp+rdc+FL/apK3GUjz23uyuOQCo8rCYdANYCkTMe1ahrNCrw2RTOl3rQTLR5h7K0XqnaU/aUby47kAdGY9TozVabQ6sLLXMuRoCwjKHI5ekConseACi51irbUcHiuXcnCfWd1k106/M8V+qbnVOmxpOFAadMuoojcmZBwMgJ75hIiMWmBkMnMmeHY6NEcdZXh0BxH0huxbnOQQ3AKp4Ig=="
+      }
+     }
+    ],
+    "skipped": []
+   }
+  },
+  {
+   "op": "decrypt",
+   "actor": "bob",
+   "from": {
+    "user": "alice",
+    "device": "dev-alice"
+   },
+   "body": {
+    "kind": "msg",
+    "header": {
+     "dh": "zvME3jSkaKqOxjg4Mof8tKS+3S7ONP4YGvA3Ffk9gSQ=",
+     "pn": 1,
+     "n": 3
+    },
+    "ct": "bwstOF8n+jO+iGOo5jHpSN3ZVh6wQU8kDXRdhtUKeNYlQgGvuYqZ6xp+rdc+FL/apK3GUjz23uyuOQCo8rCYdANYCkTMe1ahrNCrw2RTOl3rQTLR5h7K0XqnaU/aUby47kAdGY9TozVabQ6sLLXMuRoCwjKHI5ekConseACi51irbUcHiuXcnCfWd1k106/M8V+qbnVOmxpOFAadMuoojcmZBwMgJ75hIiMWmBkMnMmeHY6NEcdZXh0BxH0huxbnOQQ3AKp4Ig=="
+   },
+   "rng": "step-37",
+   "note": "bob 收到重复的 skdm：已经推进过的链不能被倒回去",
+   "expect": {
+    "payloadJson": "{\"t\":\"skdm\",\"dist\":{\"groupId\":\"group-42\",\"ownerUser\":\"alice\",\"ownerDevice\":\"dev-alice\",\"keyId\":\"9rB0yEEOOMk=\",\"chainKey\":\"Fy2DdGtSJ8U0qI5FHRADP48q2nqL2+spOQgpHqofICg=\",\"iteration\":0}}",
+    "created": false,
+    "usedOpk": null
+   }
+  },
+  {
+   "op": "decryptGroup",
+   "actor": "bob",
+   "body": {
+    "kind": "group",
+    "groupId": "group-42",
+    "ownerUser": "alice",
+    "ownerDevice": "dev-alice",
+    "keyId": "9rB0yEEOOMk=",
+    "iteration": 0,
+    "ct": "r4dvKOWMGAfwq8+EUNvogrJ9P5hVHJBrcF6CbXUwD9ek80zmLDoaQmf3mDRkTr8="
+   },
+   "rng": "step-38",
+   "note": "所以同一条群消息再来一次仍然解不开（防重放）",
+   "expect": {
+    "error": true
+   }
+  },
+  {
+   "op": "encryptGroup",
+   "actor": "alice",
+   "groupId": "group-42",
+   "payloadJson": "{\"t\":\"text\",\"text\":\"继续\"}",
+   "rng": "step-39",
+   "note": "alice 继续发",
+   "expect": {
+    "body": {
+     "kind": "group",
+     "groupId": "group-42",
+     "ownerUser": "alice",
+     "ownerDevice": "dev-alice",
+     "keyId": "9rB0yEEOOMk=",
+     "iteration": 1,
+     "ct": "XRgiAAI0XphHQpZ11Fv1Vzd4Am1KoABj2pZdvD3Jr7msmwSvXZhoaIUiYUg="
+    }
+   }
+  },
+  {
+   "op": "decryptGroup",
+   "actor": "bob",
+   "body": {
+    "kind": "group",
+    "groupId": "group-42",
+    "ownerUser": "alice",
+    "ownerDevice": "dev-alice",
+    "keyId": "9rB0yEEOOMk=",
+    "iteration": 1,
+    "ct": "XRgiAAI0XphHQpZ11Fv1Vzd4Am1KoABj2pZdvD3Jr7msmwSvXZhoaIUiYUg="
+   },
+   "rng": "step-40",
+   "note": "bob 正常解开",
+   "expect": {
+    "payloadJson": "{\"t\":\"text\",\"text\":\"继续\"}"
+   }
+  },
+  {
+   "op": "decryptGroup",
+   "actor": "bob",
+   "body": {
+    "kind": "group",
+    "groupId": "group-42",
+    "ownerUser": "alice",
+    "ownerDevice": "dev-alice",
+    "keyId": "9rB0yEEOOMk=",
+    "iteration": 51,
+    "ct": "ARgiAAI0XphHQpZ11Fv1Vzd4Am1KoABj2pZdvD3Jr7msmwSvXZhoaIUiYUg="
+   },
+   "rng": "step-41",
+   "note": "有人冒充 alice 发群消息、把序号填大 50：解不开",
+   "expect": {
+    "error": true
+   }
+  },
+  {
+   "op": "encryptGroup",
+   "actor": "alice",
+   "groupId": "group-42",
+   "payloadJson": "{\"t\":\"text\",\"text\":\"伪造之后\"}",
+   "rng": "step-42",
+   "note": "alice 的下一条真实群消息",
+   "expect": {
+    "body": {
+     "kind": "group",
+     "groupId": "group-42",
+     "ownerUser": "alice",
+     "ownerDevice": "dev-alice",
+     "keyId": "9rB0yEEOOMk=",
+     "iteration": 2,
+     "ct": "EAmW6VzmmKwlEj6MK2M6MzExN7pTS0ajTazLvJWuHuLDLzYqJ4XoGxiKD1JmCJtDOpI="
+    }
+   }
+  },
+  {
+   "op": "decryptGroup",
+   "actor": "bob",
+   "body": {
+    "kind": "group",
+    "groupId": "group-42",
+    "ownerUser": "alice",
+    "ownerDevice": "dev-alice",
+    "keyId": "9rB0yEEOOMk=",
+    "iteration": 2,
+    "ct": "EAmW6VzmmKwlEj6MK2M6MzExN7pTS0ajTazLvJWuHuLDLzYqJ4XoGxiKD1JmCJtDOpI="
+   },
+   "rng": "step-43",
+   "note": "bob 照样能解：伪造的消息没有把链往前推",
+   "expect": {
+    "payloadJson": "{\"t\":\"text\",\"text\":\"伪造之后\"}"
+   }
+  },
+  {
+   "op": "decrypt",
+   "actor": "carol",
+   "from": {
+    "user": "alice",
+    "device": "dev-alice"
+   },
+   "body": {
+    "kind": "prekey",
+    "ikSigPub": "aRHQw+gaa+vCPzCXujv9NoZVaNktz7wi4lPhBTH6kGc=",
+    "ikDhPub": "rcsI/8jJmbjg60gKPeInP1Wd6Agc5Gn9V22cUeddNC4=",
+    "ekPub": "LTi96wD32aVjoGGXY10P9s5KbZ8sxjc7ksbttOFzt2c=",
+    "spkId": "ieN8aSBJ",
+    "opkId": "SAagZB0K",
+    "header": {
+     "dh": "lG+p/rhXVupHNm+1amdBYu6Zracc9IHHuQhBX7ktow0=",
+     "pn": 0,
+     "n": 0
+    },
+    "ct": "A7W9X+foiDs+qKTX8XI6fSinakr/fmm7Sjf+IoV5838V8v/V05xDkL89f3a8gXu82++k4PGZbHZCOPiUCXffWr9Cpn9xW7pXPt2rcxmBZEKs145064jIjK+IdJsMUZaGzeM3leEuuvuqQOzKij0X6X3FNQChpL2gdVjGCnt3mvCjlC4pchL7fCpdy/o4gAa0l9yp4jJJi3ARndml41HVISL8BF3b4+mBBgpsnr54fVoYt+Oan+sV"
+   },
+   "rng": "step-44",
+   "note": "carol 收到被篡改的预密钥消息（第 21 步发给她、她还没收的那条）：解不开",
+   "expect": {
+    "error": true
+   }
+  },
+  {
+   "op": "decrypt",
+   "actor": "carol",
+   "from": {
+    "user": "alice",
+    "device": "dev-alice"
+   },
+   "body": {
+    "kind": "prekey",
+    "ikSigPub": "aRHQw+gaa+vCPzCXujv9NoZVaNktz7wi4lPhBTH6kGc=",
+    "ikDhPub": "rcsI/8jJmbjg60gKPeInP1Wd6Agc5Gn9V22cUeddNC4=",
+    "ekPub": "LTi96wD32aVjoGGXY10P9s5KbZ8sxjc7ksbttOFzt2c=",
+    "spkId": "ieN8aSBJ",
+    "opkId": "SAagZB0K",
+    "header": {
+     "dh": "lG+p/rhXVupHNm+1amdBYu6Zracc9IHHuQhBX7ktow0=",
+     "pn": 0,
+     "n": 0
+    },
+    "ct": "K7W9X+foiDs+qKTX8XI6fSinakr/fmm7Sjf+IoV5838V8v/V05xDkL89f3a8gXu82++k4PGZbHZCOPiUCXffWr9Cpn9xW7pXPt2rcxmBZEKs145064jIjK+IdJsMUZaGzeM3leEuuvuqQOzKij0X6X3FNQChpL2gdVjGCnt3mvCjlC4pchL7fCpdy/o4gAa0l9yp4jJJi3ARndml41HVISL8BF3b4+mBBgpsnr54fVoYt+Oan+sV"
+   },
+   "rng": "step-45",
+   "note": "再收到原版：作为新会话正常建立（失败的那次没有留下坏链路，所以 created=true）",
+   "expect": {
+    "payloadJson": "{\"t\":\"file\",\"blobId\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"name\":\"报告.pdf\",\"size\":12345,\"mime\":\"application/pdf\",\"key\":\"BwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwc=\"}",
+    "created": true,
+    "usedOpk": "SAagZB0K"
+   }
+  }
+ ],
+ "roam": {
+  "rng": "roam-keys",
+  "priv": "IR8doyqeJzkwtUB4snP/v5SlO96QWKOOOqHcQ2gzi90=",
+  "pub": "PfQW4ReUhuYr5z8Fj0YoYmMDiDIhJ8U7RSA/8+BQ1jM=",
+  "seals": [
+   {
+    "rng": "roam-seal-0",
+    "plaintext": "{\"t\":\"text\",\"text\":\"历史副本\"}",
+    "eph": "WjuW6wfKWbJzhJQBZxjbDoc6oGHr/VRJdrBhK5vJ70I=",
+    "ct": "QrrENOV6keBv7pQL2lhOb1G8A5soFwQ+SHB3VphinzwqvcLcbLUNr7ahWpXdWpNJgNk="
+   },
+   {
+    "rng": "roam-seal-1",
+    "plaintext": "{\"t\":\"system\",\"text\":\"\"}",
+    "eph": "DeGsF3kAtalxnc+HvOjKhsywSQrIV0o/JR7S8GNlzXI=",
+    "ct": "FRArip6IAYL6hUTQmYlpbZBghlNGfY/oiUwmEiTWgqurbyBfLIuV4Q=="
+   }
+  ],
+  "wrap": {
+   "rng": "roam-wrap",
+   "password": "账号口令 pw-123",
+   "salt": "WbBkXiAT5G0w0tQUD1hgntJDgh6HDSpX1MN5GYW1UKw=",
+   "sealed": "OOVPVqxoVKIk8cgy8QAtWNU57JjY8h6NuFLj3ctaIkwJBAee8BkvN4tjhIGdWzel5kxYgZTLdTNJAbgm"
+  }
+ },
+ "blob": [
+  {
+   "key": "9IJM7UtDEW15m7EPK+Rx41+QnDfdmtXfqwYRtHCNB9U=",
+   "data": "",
+   "ct": "U8SkTM1prAxp9sFSmyLGjQ=="
+  },
+  {
+   "key": "ibmzg5VRHvqlZ2bFMGG2m6ZMmokitJHYx9NV66ITYZg=",
+   "data": "f93pmx4=",
+   "ct": "eEbjlMyBxd2C3ffMzMArfDwnPhqC"
+  },
+  {
+   "key": "KdGijv6QDM3B+bI5D944GZAAdzoWRVjR/EqfpVlJWOU=",
+   "data": "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",
+   "ct": "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"
+  }
+ ]
+}

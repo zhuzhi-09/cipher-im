@@ -77,7 +77,12 @@ export class CryptoClient {
     const r = await this.sessions.decrypt(body, user, device);
     if (r.payload.t === 'skdm') {
       const d = r.payload.dist;
-      this.peerSenderKeys.set(senderKeyMapKey(d.groupId, d.ownerUser, d.ownerDevice), senderKeyFromDistribution(d));
+      const k = senderKeyMapKey(d.groupId, d.ownerUser, d.ownerDevice);
+      const cur = this.peerSenderKeys.get(k);
+      // 同一把密钥被重复分发（分发的是初始状态）时，不要把已经往前推的链倒回去
+      if (!cur || cur.keyId !== d.keyId || cur.iteration < d.iteration) {
+        this.peerSenderKeys.set(k, senderKeyFromDistribution(d));
+      }
     }
     if (r.usedOpk) this.sessions.consumeOpk(r.usedOpk);
     return r;

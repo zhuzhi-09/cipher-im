@@ -1,0 +1,15 @@
+name: cipher_core
+description: Cipher IM 客户端核心：端到端加密协议（与 Web 端逐字节兼容）、线协议与服务端接口。不依赖 Flutter。
+version: 0.1.0
+publish_to: none
+
+environment:
+  sdk: ^3.13.7
+
+dependencies:
+  crypto: ^3.0.6
+  cryptography: ^2.7.0
+
+dev_dependencies:
+  lints: ^6.0.0
+  test: ^1.25.6

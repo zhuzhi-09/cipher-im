@@ -19,6 +19,13 @@ export interface SenderKeyState {
   keyId: string;
   chainKey: string; // b64
   iteration: number;
+  /**
+   * 自己的密钥：创建时的链状态。分发时永远发这个，而不是当前状态——
+   * 否则「先发了群消息、分发才送出」时，收方拿到的链已经越过那条消息，永远解不开。
+   * 旧版本存下的状态没有这两个字段，分发时退回当前状态（旧行为）。
+   */
+  initChainKey?: string;
+  initIteration?: number;
 }
 
 export interface SenderKeyDistribution {
@@ -51,14 +58,9 @@ function groupAad(groupId: string, ownerUser: string, ownerDevice: string, keyId
 }
 
 export function createSenderKey(groupId: string, ownerUser: string, ownerDevice: string): SenderKeyState {
-  return {
-    groupId,
-    ownerUser,
-    ownerDevice,
-    keyId: toB64(randomBytes(8)),
-    chainKey: toB64(randomBytes(32)),
-    iteration: 0,
-  };
+  const keyId = toB64(randomBytes(8));
+  const chainKey = toB64(randomBytes(32));
+  return { groupId, ownerUser, ownerDevice, keyId, chainKey, iteration: 0, initChainKey: chainKey, initIteration: 0 };
 }
 
 function ratchetChain(chainKey: Bytes): { chainKey: Bytes; mk: Bytes } {
@@ -83,13 +85,20 @@ export function senderKeyDistribution(st: SenderKeyState): SenderKeyDistribution
     ownerUser: st.ownerUser,
     ownerDevice: st.ownerDevice,
     keyId: st.keyId,
-    chainKey: st.chainKey,
-    iteration: st.iteration,
+    chainKey: st.initChainKey ?? st.chainKey,
+    iteration: st.initIteration ?? st.iteration,
   };
 }
 
 export function senderKeyFromDistribution(d: SenderKeyDistribution): SenderKeyState {
-  return { ...d };
+  return {
+    groupId: d.groupId,
+    ownerUser: d.ownerUser,
+    ownerDevice: d.ownerDevice,
+    keyId: d.keyId,
+    chainKey: d.chainKey,
+    iteration: d.iteration,
+  };
 }
 
 export async function senderKeyDecrypt(
@@ -109,7 +118,9 @@ export async function senderKeyDecrypt(
     ck = r.chainKey;
     mk = r.mk;
   }
+  // 先解密成功再推进链：伪造的密文（例如别的群成员冒充 owner、把序号填得很大）不能把链推坏
+  const pt = await aeadOpen(mk, ct, groupAad(st.groupId, st.ownerUser, st.ownerDevice, st.keyId, iteration));
   st.chainKey = toB64(ck);
   st.iteration = iteration + 1;
-  return aeadOpen(mk, ct, groupAad(st.groupId, st.ownerUser, st.ownerDevice, st.keyId, iteration));
+  return pt;
 }
