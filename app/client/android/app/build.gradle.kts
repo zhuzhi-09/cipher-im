@@ -69,4 +69,6 @@ flutter {
 
 dependencies {
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.4")
+    // 前台服务的通知（KeepAliveService）
+    implementation("androidx.core:core:1.19.0")
 }

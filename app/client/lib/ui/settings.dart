@@ -7,6 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../platform.dart';
+import '../update.dart';
+import 'update_dialog.dart';
 import '../service.dart';
 import '../vault.dart';
 
@@ -23,6 +25,8 @@ class SettingsPage extends StatefulWidget {
 
 class _SettingsPageState extends State<SettingsPage> {
   bool? _autostart;
+  bool? _batteryFree;
+  bool _checking = false;
 
   Vault get v => widget.svc.vault;
 
@@ -34,11 +38,43 @@ class _SettingsPageState extends State<SettingsPage> {
         if (mounted) setState(() => _autostart = on);
       });
     }
+    _checkBattery();
+  }
+
+  Future<void> _checkBattery() async {
+    if (!Platform.isAndroid) return;
+    final free = await AndroidBackground.ignoringBatteryOptimizations();
+    if (mounted) setState(() => _batteryFree = free);
+  }
+
+  Future<void> _requestBattery() async {
+    await AndroidBackground.requestIgnoreBatteryOptimizations();
+    // 系统弹窗关掉后回到这里，再查一次
+    await Future<void>.delayed(const Duration(seconds: 1));
+    await _checkBattery();
   }
 
   void _copy(String label, String value) {
     Clipboard.setData(ClipboardData(text: value));
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('已复制$label')));
+  }
+
+  Future<void> _checkUpdate() async {
+    setState(() => _checking = true);
+    final messenger = ScaffoldMessenger.of(context);
+    try {
+      final info = await checkForUpdate();
+      if (!mounted) return;
+      if (info == null) {
+        messenger.showSnackBar(const SnackBar(content: Text('已经是最新版本')));
+      } else {
+        await showUpdateDialog(context, info);
+      }
+    } catch (e) {
+      messenger.showSnackBar(SnackBar(content: Text('检查更新失败：$e')));
+    } finally {
+      if (mounted) setState(() => _checking = false);
+    }
   }
 
   Future<void> _logout() async {
@@ -94,6 +130,33 @@ class _SettingsPageState extends State<SettingsPage> {
               widget.svc.savePrefs();
             },
           ),
+          if (Platform.isAndroid) ...[
+            SwitchListTile(
+              secondary: const Icon(Icons.sync_outlined),
+              title: const Text('后台保持连接'),
+              subtitle: const Text('关掉界面也能收到消息；状态栏会常驻一条「正在后台运行」的通知'),
+              value: v.keepAlive,
+              onChanged: (on) async {
+                setState(() => v.keepAlive = on);
+                widget.svc.savePrefs();
+                if (on) {
+                  await AndroidBackground.start();
+                } else {
+                  await AndroidBackground.stop();
+                }
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.battery_saver_outlined),
+              title: const Text('不受电池优化限制'),
+              subtitle: Text(
+                _batteryFree == true ? '已允许：省电模式下也不会被断开' : '没开的话，手机省电时可能断开连接、收不到消息',
+              ),
+              trailing: _batteryFree == true
+                  ? Icon(Icons.check_circle, color: cs.primary)
+                  : FilledButton.tonal(onPressed: _requestBattery, child: const Text('去允许')),
+            ),
+          ],
           if (Platform.isWindows)
             SwitchListTile(
               secondary: const Icon(Icons.power_settings_new),
@@ -111,8 +174,21 @@ class _SettingsPageState extends State<SettingsPage> {
           header('关于'),
           ListTile(
             leading: const Icon(Icons.info_outline),
-            title: const Text('Cipher IM'),
+            title: const Text('Cipher IM $appVersion'),
             subtitle: const Text('开源 · AGPL-3.0'),
+            trailing: _checking
+                ? const SizedBox(width: 24, height: 24, child: CircularProgressIndicator(strokeWidth: 2))
+                : TextButton(onPressed: _checkUpdate, child: const Text('检查更新')),
+          ),
+          SwitchListTile(
+            secondary: const Icon(Icons.update),
+            title: const Text('自动检查更新'),
+            subtitle: const Text('每天最多一次，会访问 github.com'),
+            value: v.autoUpdateCheck,
+            onChanged: (on) {
+              setState(() => v.autoUpdateCheck = on);
+              widget.svc.savePrefs();
+            },
           ),
           info(Icons.code, '源代码', sourceUrl),
           const Divider(height: 32),

@@ -12,7 +12,9 @@ import 'package:flutter/services.dart';
 import '../platform.dart';
 import '../service.dart';
 import '../vault.dart';
+import '../update.dart';
 import 'settings.dart';
+import 'update_dialog.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key, required this.svc, required this.onLogout});
@@ -38,6 +40,27 @@ class _HomeScreenState extends State<HomeScreen> {
       if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(t)));
     });
     HomeScreen.openConvRequest.addListener(_onOpenRequest);
+    _autoCheckUpdate();
+  }
+
+  /// 每天最多自动查一次新版本；查不到、没网都安静跳过
+  Future<void> _autoCheckUpdate() async {
+    final v = svc.vault;
+    final now = DateTime.now().millisecondsSinceEpoch;
+    if (!v.autoUpdateCheck || now - v.lastUpdateCheck < const Duration(hours: 20).inMilliseconds) return;
+    v.lastUpdateCheck = now;
+    svc.savePrefs();
+    try {
+      final info = await checkForUpdate();
+      if (info == null || !mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('有新版本 ${info.version}'),
+          duration: const Duration(seconds: 10),
+          action: SnackBarAction(label: '查看', onPressed: () => showUpdateDialog(context, info)),
+        ),
+      );
+    } catch (_) {}
   }
 
   @override

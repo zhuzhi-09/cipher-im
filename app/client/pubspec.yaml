@@ -13,6 +13,8 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_local_notifications: ^23.0.4
+  flutter_localizations:
+    sdk: flutter
   flutter_secure_storage: ^11.2.0
   path_provider: ^2.1.6
   tray_manager: ^0.5.1

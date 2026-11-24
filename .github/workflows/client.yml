@@ -58,9 +58,17 @@ jobs:
           flutter-version: ${{ env.FLUTTER_VERSION }}
           channel: stable
           cache: true
+      # 版本号：打 v1.2.3 标签时用标签，否则用 pubspec 里的；构建号用运行序号（安卓靠它判断能否覆盖升级）
+      - name: 版本号
+        shell: bash
+        run: |
+          if [[ "$GITHUB_REF" == refs/tags/v* ]]; then v="${GITHUB_REF_NAME#v}"; else v="$(awk '/^version:/{split($2,a,"+"); print a[1]}' app/client/pubspec.yaml)"; fi
+          echo "APP_VERSION=$v" >> "$GITHUB_ENV"
+          echo "版本 $v（构建 $GITHUB_RUN_NUMBER）"
       - name: 构建
         working-directory: app/client
-        run: flutter build windows --release
+        shell: bash
+        run: flutter build windows --release --build-name="$APP_VERSION" --build-number="$GITHUB_RUN_NUMBER" --dart-define=APP_VERSION="$APP_VERSION"
       - name: 打包
         shell: pwsh
         run: |
@@ -104,9 +112,16 @@ jobs:
             echo "keyAlias=$KEY_ALIAS"
             echo "keyPassword=$KEY_PASSWORD"
           } > key.properties
+      # 版本号：打 v1.2.3 标签时用标签，否则用 pubspec 里的；构建号用运行序号（安卓靠它判断能否覆盖升级）
+      - name: 版本号
+        shell: bash
+        run: |
+          if [[ "$GITHUB_REF" == refs/tags/v* ]]; then v="${GITHUB_REF_NAME#v}"; else v="$(awk '/^version:/{split($2,a,"+"); print a[1]}' app/client/pubspec.yaml)"; fi
+          echo "APP_VERSION=$v" >> "$GITHUB_ENV"
+          echo "版本 $v（构建 $GITHUB_RUN_NUMBER）"
       - name: 构建
         working-directory: app/client
-        run: flutter build apk --release
+        run: flutter build apk --release --build-name="$APP_VERSION" --build-number="$GITHUB_RUN_NUMBER" --dart-define=APP_VERSION="$APP_VERSION"
       - run: cp app/client/build/app/outputs/flutter-apk/app-release.apk CipherIM-android.apk
       - uses: actions/upload-artifact@v4
         with:

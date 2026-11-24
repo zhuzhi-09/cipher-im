@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'platform.dart';
 import 'service.dart';
@@ -66,6 +67,8 @@ class _CipherAppState extends State<CipherApp> with WidgetsBindingObserver {
     }
     final v = widget.initial;
     if (v != null) _attach(v);
+    // 第一帧画出来说明界面已经起来了，这时才能弹系统权限框
+    WidgetsBinding.instance.addPostFrameCallback((_) => widget.notifier.requestPermission());
   }
 
   @override
@@ -79,10 +82,10 @@ class _CipherAppState extends State<CipherApp> with WidgetsBindingObserver {
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (isDesktop) return;
     _svc?.setVisible(state == AppLifecycleState.resumed);
-    if (state == AppLifecycleState.paused) {
-      final s = _svc;
-      if (s != null) unawaited(widget.store.save(s.vault));
-    }
+    // 后台服务在进程被系统重启时可能没起来：界面一回到前台就补一次
+    final s = _svc;
+    if (state == AppLifecycleState.resumed && s != null && s.vault.keepAlive) unawaited(AndroidBackground.start());
+    if (state == AppLifecycleState.paused && s != null) unawaited(widget.store.save(s.vault));
   }
 
   void _attach(Vault v) {
@@ -100,6 +103,11 @@ class _CipherAppState extends State<CipherApp> with WidgetsBindingObserver {
     };
     s.addListener(() => _shell?.setUnread(s.totalUnread));
     if (Platform.isWindows && widget.startHidden) s.appVisible = false;
+    if (Platform.isAndroid) {
+      // 安卓上引擎可能是后台服务拉起来的，这时界面并不在前台
+      s.appVisible = WidgetsBinding.instance.lifecycleState == AppLifecycleState.resumed;
+      if (v.keepAlive) unawaited(AndroidBackground.start());
+    }
     s.start();
     setState(() => _svc = s);
   }
@@ -110,6 +118,7 @@ class _CipherAppState extends State<CipherApp> with WidgetsBindingObserver {
   }
 
   Future<void> _logout() async {
+    await AndroidBackground.stop();
     final s = _svc;
     if (s != null) {
       await s.logout();
@@ -138,6 +147,10 @@ class _CipherAppState extends State<CipherApp> with WidgetsBindingObserver {
         title: 'Cipher IM',
         navigatorKey: _navKey,
         debugShowCheckedModeBanner: false,
+        // 固定简体中文：系统语言是日文等时，汉字才不会落到别的字体、显示成别的字形
+        locale: const Locale('zh', 'CN'),
+        supportedLocales: const [Locale('zh', 'CN')],
+        localizationsDelegates: GlobalMaterialLocalizations.delegates,
         theme: _theme(light, Brightness.light),
         darkTheme: _theme(dark, Brightness.dark),
         home: _home(),
@@ -152,6 +165,9 @@ class _CipherAppState extends State<CipherApp> with WidgetsBindingObserver {
     return ThemeData(
       colorScheme: scheme,
       useMaterial3: true,
+      // Windows 指定中文字体；安卓靠上面的 zh-CN 语言区域选到简体字形
+      fontFamily: Platform.isWindows ? 'Microsoft YaHei UI' : null,
+      fontFamilyFallback: Platform.isWindows ? const ['Microsoft YaHei', 'Segoe UI Emoji', 'Segoe UI Symbol'] : null,
       snackBarTheme: const SnackBarThemeData(behavior: SnackBarBehavior.floating),
     );
   }

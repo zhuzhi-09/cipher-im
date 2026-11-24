@@ -99,6 +99,18 @@ class Vault {
   bool get notifyPreview => prefs['notifyPreview'] != false;
   set notifyPreview(bool v) => prefs['notifyPreview'] = v;
 
+  /// 启动时自动检查 GitHub 上有没有新版本（默认开；会访问 github.com）
+  bool get autoUpdateCheck => prefs['autoUpdateCheck'] != false;
+  set autoUpdateCheck(bool v) => prefs['autoUpdateCheck'] = v;
+
+  /// 上次自动检查的时间（毫秒），一天最多查一次
+  int get lastUpdateCheck => (prefs['lastUpdateCheck'] as num?)?.toInt() ?? 0;
+  set lastUpdateCheck(int v) => prefs['lastUpdateCheck'] = v;
+
+  /// 安卓：用前台服务在后台保持连接（默认开）
+  bool get keepAlive => prefs['keepAlive'] != false;
+  set keepAlive(bool v) => prefs['keepAlive'] = v;
+
   /// 每个会话本地最多留多少条明文
   static const logLimit = 500;
 

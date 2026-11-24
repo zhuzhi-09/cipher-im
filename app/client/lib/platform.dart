@@ -2,9 +2,9 @@
 library;
 
 import 'dart:io';
-import 'dart:ui' show Size;
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:tray_manager/tray_manager.dart';
 import 'package:window_manager/window_manager.dart';
@@ -37,14 +37,22 @@ class Notifier {
           if (conv != null) onOpen?.call(conv);
         },
       );
-      if (Platform.isAndroid) {
-        await _plugin
-            .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
-            ?.requestNotificationsPermission();
-      }
       _ready = true;
     } catch (e) {
       debugPrint('通知初始化失败：$e');
+    }
+  }
+
+  /// 安卓 13+ 要用户点允许才能弹通知。必须在界面（Activity）起来以后调：
+  /// 安卓上引擎可能比界面先启动（后台服务把进程拉起来时）
+  Future<void> requestPermission() async {
+    if (!Platform.isAndroid || !_ready) return;
+    try {
+      await _plugin
+          .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
+          ?.requestNotificationsPermission();
+    } catch (e) {
+      debugPrint('申请通知权限失败：$e');
     }
   }
 
@@ -77,6 +85,45 @@ class Notifier {
     if (!_ready) return;
     try {
       await _plugin.cancel(id: conv);
+    } catch (_) {}
+  }
+}
+
+/* ---------------- 安卓后台保持连接 ---------------- */
+
+/// 对应 android/.../CipherApp.kt：前台服务让进程常驻，电池优化白名单防止被省电策略断网
+class AndroidBackground {
+  static const _ch = MethodChannel('cipherim/android');
+
+  static Future<void> start() async {
+    if (!Platform.isAndroid) return;
+    try {
+      await _ch.invokeMethod('startKeepAlive');
+    } catch (e) {
+      debugPrint('启动后台服务失败：$e');
+    }
+  }
+
+  static Future<void> stop() async {
+    if (!Platform.isAndroid) return;
+    try {
+      await _ch.invokeMethod('stopKeepAlive');
+    } catch (_) {}
+  }
+
+  static Future<bool> ignoringBatteryOptimizations() async {
+    if (!Platform.isAndroid) return true;
+    try {
+      return await _ch.invokeMethod<bool>('ignoringBatteryOptimizations') ?? false;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  static Future<void> requestIgnoreBatteryOptimizations() async {
+    if (!Platform.isAndroid) return;
+    try {
+      await _ch.invokeMethod('requestIgnoreBatteryOptimizations');
     } catch (_) {}
   }
 }
