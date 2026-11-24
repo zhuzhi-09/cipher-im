@@ -11,6 +11,7 @@ import 'package:cipher_core/cipher_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:path_provider/path_provider.dart';
 
+import 'media.dart';
 import 'vault.dart';
 
 class Member {
@@ -18,6 +19,16 @@ class Member {
   final String user;
   final String displayName;
   final List<String> devices;
+}
+
+class DeviceSafety {
+  DeviceSafety({required this.key, required this.device, required this.safety, required this.state});
+  final String key;
+  final String device;
+
+  /// 60 位安全码；还没拿到对方身份公钥时为 null
+  final String? safety;
+  final TrustState state;
 }
 
 class Conv {
@@ -316,6 +327,7 @@ class ChatService extends ChangeNotifier {
           for (final b in m['bundles'] as List)
             bundleKey(user, b['device'] as String): PublicBundle.fromJson(Map<String, dynamic>.from(b['bundle'] as Map)),
         };
+        map.forEach((k, b) => _learnIdentity(k, b.ikSigPub));
         _bundleWaiters.remove(user)?.complete(map);
       case 'users':
         _searchWaiter?.complete([
@@ -360,11 +372,13 @@ class ChatService extends ChangeNotifier {
     Payload payload;
     try {
       final body = WireBody.fromJson(Map<String, dynamic>.from(wm['body'] as Map));
-      payload = await _locked(
-        () async => body is GroupBody
-            ? await vault.client.decryptGroup(body)
-            : (await vault.client.decryptFrom(user, device, body)).payload,
-      );
+      payload = await _locked(() async {
+        if (body is GroupBody) return vault.client.decryptGroup(body);
+        final r = await vault.client.decryptFrom(user, device, body);
+        // 首条（预密钥）消息里带着对方的身份公钥
+        if (r.peerIkSigPub != null) _learnIdentity(bundleKey(user, device), r.peerIkSigPub!);
+        return r.payload;
+      });
     } catch (e) {
       payload = {'t': 'system', 'text': '无法解密：$e'};
     }
@@ -482,6 +496,65 @@ class ChatService extends ChangeNotifier {
       }
     });
     return c.future;
+  }
+
+  /* ---------------- 安全码 ---------------- */
+
+  /// 记下对方设备的身份公钥；核对过的设备换了密钥就标成「已变更」
+  void _learnIdentity(String key, String ikSigPub) {
+    if (vault.idkeys[key] == ikSigPub) return;
+    vault.idkeys[key] = ikSigPub;
+    final r = vault.trust[key];
+    if (r != null && !r.changed && r.safety != _safetyWith(ikSigPub)) {
+      vault.trust[key] = TrustRecord(safety: r.safety, changed: true, at: r.at);
+    }
+    _persistSoon();
+    notifyListeners();
+  }
+
+  String _safetyWith(String peerIkSigPub) => safetyNumber(vault.keys.identity.ikSigPub, fromB64(peerIkSigPub));
+
+  /// 某个用户每台设备的安全码；还没拿到身份公钥的设备 safety 为 null
+  List<DeviceSafety> safetyOf(String user, {Iterable<String> devices = const []}) {
+    final prefix = '$user/';
+    final ids = <String>{
+      ...devices,
+      for (final k in vault.idkeys.keys)
+        if (k.startsWith(prefix)) k.substring(prefix.length),
+    };
+    return [
+      for (final d in ids.toList()..sort())
+        () {
+          final key = bundleKey(user, d);
+          final pub = vault.idkeys[key];
+          final sn = pub == null ? null : _safetyWith(pub);
+          return DeviceSafety(
+            key: key,
+            device: d,
+            safety: sn,
+            state: sn == null ? TrustState.unverified : TrustRecord.evaluate(sn, vault.trust[key]),
+          );
+        }(),
+    ];
+  }
+
+  /// 有设备的安全码在核对之后变了
+  bool trustChanged(String user) => safetyOf(user).any((s) => s.state == TrustState.changed);
+
+  /// 向服务器要对方的身份公钥（会消耗对方每台设备一枚一次性预密钥，只在用户点了才做）
+  Future<void> fetchIdentities(String user) => _bundlesOf(user);
+
+  void markVerified(DeviceSafety s) {
+    if (s.safety == null) return;
+    vault.trust[s.key] = TrustRecord(safety: s.safety!, changed: false, at: DateTime.now().millisecondsSinceEpoch);
+    _persistSoon();
+    notifyListeners();
+  }
+
+  void untrust(DeviceSafety s) {
+    vault.trust.remove(s.key);
+    _persistSoon();
+    notifyListeners();
   }
 
   /// 只给还没有会话的设备取预密钥包（取一次就消耗对方一枚一次性预密钥）
@@ -687,19 +760,132 @@ class ChatService extends ChangeNotifier {
 
   /* ---------------- 文件 ---------------- */
 
+  /// 单个文件上限，和服务端 MAX_BLOB 一致
+  static const maxFileBytes = 30 * 1024 * 1024;
+
+  /// 正在上传的文件数（聊天页显示进度条）
+  final uploading = <int, int>{};
+
+  /// 发文件：本机用随机密钥加密 → 上传密文 → 把密钥放进端到端加密的消息里发出去
+  /// （和 Web 端同一格式，两边互通）
+  Future<void> sendFile(int convId, {required String name, required Uint8List bytes, String mime = ''}) async {
+    if (bytes.length > maxFileBytes) throw StateError('单个文件上限 30MB');
+    final type = mime.isNotEmpty ? mime : mimeFromName(name);
+    uploading[convId] = (uploading[convId] ?? 0) + 1;
+    notifyListeners();
+    try {
+      final key = randomBytes(32);
+      final ct = await aeadSeal(key, bytes, utf8Bytes('blob'));
+      final up = await api.putBlob(vault.token, ct, type);
+      // 自己发的直接放进缓存，不用再下载
+      await _cacheWrite(up.id, ct);
+      await _sendPayload(convId, {
+        't': 'file',
+        'blobId': up.id,
+        'name': name,
+        'size': bytes.length,
+        'mime': type,
+        'key': toB64(key),
+      });
+    } finally {
+      final n = (uploading[convId] ?? 1) - 1;
+      if (n <= 0) {
+        uploading.remove(convId);
+      } else {
+        uploading[convId] = n;
+      }
+      notifyListeners();
+    }
+  }
+
+  /// 附件缓存：只存密文（密钥在本机密钥库里），所以缓存目录里没有明文。
+  /// 好处是服务器 14 天清掉之后，看过的图片在本机仍然能打开。
+  Directory? _cacheDir;
+
+  @visibleForTesting
+  set blobCacheDir(Directory d) => _cacheDir = d;
+
+  Future<Directory> _blobCache() async {
+    if (_cacheDir != null) return _cacheDir!;
+    final base = await getApplicationSupportDirectory();
+    return _cacheDir = await Directory('${base.path}${Platform.pathSeparator}blobs').create(recursive: true);
+  }
+
+  File _cacheFile(Directory d, String id) => File('${d.path}${Platform.pathSeparator}${id.replaceAll(RegExp(r'[^0-9a-zA-Z]'), '')}');
+
+  Future<void> _cacheWrite(String id, Uint8List ct) async {
+    try {
+      final f = _cacheFile(await _blobCache(), id);
+      final tmp = File('${f.path}.part');
+      await tmp.writeAsBytes(ct, flush: true);
+      await tmp.rename(f.path);
+    } catch (_) {
+      // 缓存写不进去只是下次要重新下载
+    }
+  }
+
+  final _decrypting = <String, Future<Uint8List>>{};
+
+  /// 取附件明文（先看本机缓存，没有再下载），解密只在内存里
+  Future<Uint8List> fileBytes(Payload p) {
+    final id = p['blobId'] as String;
+    return _decrypting[id] ??= () async {
+      try {
+        File? f;
+        try {
+          f = _cacheFile(await _blobCache(), id);
+        } catch (_) {}
+        Uint8List ct;
+        if (f != null && await f.exists()) {
+          ct = await f.readAsBytes();
+        } else {
+          ct = await api.getBlob(vault.token, id);
+          await _cacheWrite(id, ct);
+        }
+        return Uint8List.fromList(await aeadOpen(fromB64(p['key'] as String), ct, utf8Bytes('blob')));
+      } finally {
+        // 明文不常驻内存，界面那边自己留着要显示的那份
+        unawaited(Future<void>.delayed(const Duration(seconds: 1), () => _decrypting.remove(id)));
+      }
+    }();
+  }
+
   /// 下载并解密附件，存进「下载」文件夹，返回保存路径
   Future<String> saveFile(Payload p) async {
-    final ct = await api.getBlob(vault.token, p['blobId'] as String);
-    final pt = await aeadOpen(fromB64(p['key'] as String), ct, utf8Bytes('blob'));
+    final pt = await fileBytes(p);
     final dir = await getDownloadsDirectory() ?? await getApplicationDocumentsDirectory();
-    final safe = (p['name'] as String? ?? 'file').replaceAll(RegExp(r'[\\/:*?"<>|]'), '_');
+    final f = await _uniqueFile(dir, p['name'] as String? ?? 'file');
+    await f.writeAsBytes(pt);
+    return f.path;
+  }
+
+  /// 解密到临时目录，给系统里的其他软件打开用（打开后的文件由那个软件处理）
+  Future<String> exportForOpen(Payload p) async {
+    final pt = await fileBytes(p);
+    final base = await getTemporaryDirectory();
+    final dir = await Directory('${base.path}${Platform.pathSeparator}cipherim-open').create(recursive: true);
+    final f = await _uniqueFile(dir, p['name'] as String? ?? 'file');
+    await f.writeAsBytes(pt);
+    return f.path;
+  }
+
+  /// 清掉上次给外部软件打开留下的临时明文
+  static Future<void> cleanOpenedFiles() async {
+    try {
+      final base = await getTemporaryDirectory();
+      final dir = Directory('${base.path}${Platform.pathSeparator}cipherim-open');
+      if (await dir.exists()) await dir.delete(recursive: true);
+    } catch (_) {}
+  }
+
+  static Future<File> _uniqueFile(Directory dir, String name) async {
+    final safe = name.replaceAll(RegExp(r'[\\/:*?"<>|\x00-\x1f]'), '_');
     var f = File('${dir.path}${Platform.pathSeparator}$safe');
     for (var i = 1; await f.exists(); i++) {
       final dot = safe.lastIndexOf('.');
       final n = dot > 0 ? '${safe.substring(0, dot)} ($i)${safe.substring(dot)}' : '$safe ($i)';
       f = File('${dir.path}${Platform.pathSeparator}$n');
     }
-    await f.writeAsBytes(Uint8List.fromList(pt));
-    return f.path;
+    return f;
   }
 }

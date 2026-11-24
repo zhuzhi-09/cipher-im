@@ -75,10 +75,14 @@ class Vault {
     Map<String, String>? contacts,
     Map<String, List<LocalMsg>>? log,
     Map<String, dynamic>? prefs,
+    Map<String, String>? idkeys,
+    Map<String, TrustRecord>? trust,
   }) : reads = reads ?? {},
        contacts = contacts ?? {},
        log = log ?? {},
-       prefs = prefs ?? {};
+       prefs = prefs ?? {},
+       idkeys = idkeys ?? {},
+       trust = trust ?? {};
 
   /// 服务器根地址（账号和服务器绑在一起，换服务器 = 换账号）
   final String server;
@@ -93,6 +97,12 @@ class Vault {
   final Map<String, String> contacts;
   final Map<String, List<LocalMsg>> log;
   final Map<String, dynamic> prefs;
+
+  /// 见过的对方设备身份公钥（IK_sig，base64），键是 用户/设备。算安全码用
+  final Map<String, String> idkeys;
+
+  /// 核对过的安全码，键是 用户/设备
+  final Map<String, TrustRecord> trust;
 
   DeviceKeys get keys => client.keys;
 
@@ -130,6 +140,8 @@ class Vault {
     'contacts': contacts,
     'log': log.map((k, v) => MapEntry(k, v.map((m) => m.toJson()).toList())),
     'prefs': prefs,
+    'idkeys': idkeys,
+    'trust': trust.map((k, v) => MapEntry(k, v.toJson())),
   };
 
   factory Vault.fromJson(Map<String, dynamic> j) {
@@ -158,8 +170,39 @@ class Vault {
         ),
       ),
       prefs: Map<String, dynamic>.from(j['prefs'] as Map? ?? const {}),
+      idkeys: Map<String, String>.from(j['idkeys'] as Map? ?? const {}),
+      trust: (j['trust'] as Map? ?? const {}).map(
+        (k, v) => MapEntry(k as String, TrustRecord.fromJson(Map<String, dynamic>.from(v as Map))),
+      ),
     );
   }
+}
+
+/// 安全码核对状态（和 Web 端 trust.ts 同一套三态）
+enum TrustState { unverified, verified, changed }
+
+class TrustRecord {
+  TrustRecord({required this.safety, required this.changed, required this.at});
+
+  /// 核对时记下的安全码
+  final String safety;
+
+  /// 核对之后对方的密钥变过
+  final bool changed;
+  final int at;
+
+  static TrustState evaluate(String currentSafety, TrustRecord? r) {
+    if (r == null) return TrustState.unverified;
+    if (r.changed) return TrustState.changed;
+    return r.safety == currentSafety ? TrustState.verified : TrustState.changed;
+  }
+
+  Map<String, dynamic> toJson() => {'safety': safety, 'state': changed ? 'changed' : 'verified', 'at': at};
+  factory TrustRecord.fromJson(Map<String, dynamic> j) => TrustRecord(
+    safety: j['safety'] as String,
+    changed: j['state'] == 'changed',
+    at: (j['at'] as num?)?.toInt() ?? 0,
+  );
 }
 
 /// 设备号：d- 加 10 位小写字母数字（和 Web 端同一格式）

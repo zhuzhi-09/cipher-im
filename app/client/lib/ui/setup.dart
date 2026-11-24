@@ -1,15 +1,20 @@
 /// 首次启动：先连服务器（必须自己填，没有默认值），再注册或登录
+///
+/// 登录过的「服务器 + 用户名」会记在「最近连接」里，点一下就能填好；
+/// 密码只有勾了「记住密码」才记。
 library;
 
 import 'package:cipher_core/cipher_core.dart';
 import 'package:flutter/material.dart';
 
+import '../connections.dart';
 import '../service.dart';
 import '../vault.dart';
 
 class SetupScreen extends StatefulWidget {
-  const SetupScreen({super.key, required this.onSignedIn});
+  const SetupScreen({super.key, required this.onSignedIn, required this.connections});
   final Future<void> Function(Vault v) onSignedIn;
+  final ConnectionStore connections;
 
   @override
   State<SetupScreen> createState() => _SetupScreenState();
@@ -17,6 +22,9 @@ class SetupScreen extends StatefulWidget {
 
 class _SetupScreenState extends State<SetupScreen> {
   ServerInfo? _server;
+
+  /// 从「最近连接」点进来时带上用户名（和记住的密码）
+  SavedConnection? _prefill;
 
   @override
   Widget build(BuildContext context) {
@@ -40,11 +48,22 @@ class _SetupScreenState extends State<SetupScreen> {
                 ),
                 const SizedBox(height: 28),
                 if (_server == null)
-                  _ServerStep(onOk: (s) => setState(() => _server = s))
+                  _ServerStep(
+                    connections: widget.connections,
+                    onOk: (s, saved) => setState(() {
+                      _server = s;
+                      _prefill = saved;
+                    }),
+                  )
                 else
                   _AuthStep(
                     server: _server!,
-                    onBack: () => setState(() => _server = null),
+                    prefill: _prefill,
+                    connections: widget.connections,
+                    onBack: () => setState(() {
+                      _server = null;
+                      _prefill = null;
+                    }),
                     onSignedIn: widget.onSignedIn,
                   ),
               ],
@@ -57,8 +76,9 @@ class _SetupScreenState extends State<SetupScreen> {
 }
 
 class _ServerStep extends StatefulWidget {
-  const _ServerStep({required this.onOk});
-  final void Function(ServerInfo s) onOk;
+  const _ServerStep({required this.onOk, required this.connections});
+  final void Function(ServerInfo s, SavedConnection? saved) onOk;
+  final ConnectionStore connections;
 
   @override
   State<_ServerStep> createState() => _ServerStepState();
@@ -68,38 +88,121 @@ class _ServerStepState extends State<_ServerStep> {
   final _ctl = TextEditingController();
   String? _err;
   bool _busy = false;
+  List<SavedConnection> _saved = [];
 
-  Future<void> _check() async {
+  /// 正在连的那条最近连接（显示转圈用）
+  SavedConnection? _picking;
+
+  @override
+  void initState() {
+    super.initState();
+    _load();
+  }
+
+  Future<void> _load() async {
+    final items = await widget.connections.list();
+    if (mounted) setState(() => _saved = items);
+  }
+
+  Future<void> _check({SavedConnection? saved}) async {
     setState(() {
       _busy = true;
+      _picking = saved;
       _err = null;
     });
     try {
-      final info = await checkServer(normalizeServerAddress(_ctl.text));
-      widget.onOk(info);
+      final info = await checkServer(saved != null ? Uri.parse(saved.server) : normalizeServerAddress(_ctl.text));
+      widget.onOk(info, saved);
     } catch (e) {
-      setState(() => _err = '$e');
+      if (mounted) setState(() => _err = saved == null ? '$e' : '连不上 ${saved.host}：$e');
     } finally {
-      if (mounted) setState(() => _busy = false);
+      if (mounted) {
+        setState(() {
+          _busy = false;
+          _picking = null;
+        });
+      }
     }
+  }
+
+  Future<void> _forget(SavedConnection c) async {
+    final ok = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('删除这条连接记录？'),
+        content: Text(
+          '${c.username} @ ${c.host}\n'
+          '${c.hasPassword ? '记住的密码也会一起删掉。' : ''}只删本机的记录，不影响账号。',
+        ),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('取消')),
+          TextButton(onPressed: () => Navigator.pop(context, true), child: const Text('删除')),
+        ],
+      ),
+    );
+    if (ok != true) return;
+    await widget.connections.forget(c.server, c.username);
+    await _load();
   }
 
   @override
   Widget build(BuildContext context) {
+    final t = Theme.of(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Text('连接服务器', style: Theme.of(context).textTheme.titleMedium),
+        if (_saved.isNotEmpty) ...[
+          Text('最近连接', style: t.textTheme.titleMedium),
+          const SizedBox(height: 8),
+          Card.outlined(
+            margin: EdgeInsets.zero,
+            clipBehavior: Clip.antiAlias,
+            child: Column(
+              children: [
+                for (final c in _saved)
+                  ListTile(
+                    leading: CircleAvatar(
+                      child: Text((c.displayName.isEmpty ? c.username : c.displayName).characters.first.toUpperCase()),
+                    ),
+                    title: Text(
+                      c.displayName.isEmpty || c.displayName == c.username
+                          ? c.username
+                          : '${c.displayName}（${c.username}）',
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    subtitle: Text(c.hasPassword ? '${c.host} · 已记住密码' : c.host, overflow: TextOverflow.ellipsis),
+                    enabled: !_busy,
+                    onTap: () => _check(saved: c),
+                    trailing: identical(_picking, c)
+                        ? const _Spinner()
+                        : IconButton(
+                            tooltip: '删除记录',
+                            icon: const Icon(Icons.close),
+                            onPressed: _busy ? null : () => _forget(c),
+                          ),
+                  ),
+              ],
+            ),
+          ),
+          if (_err != null && _ctl.text.isEmpty)
+            Padding(
+              padding: const EdgeInsets.only(top: 8),
+              child: Text(_err!, style: TextStyle(color: t.colorScheme.error)),
+            ),
+          const SizedBox(height: 24),
+          Text('其他服务器', style: t.textTheme.titleMedium),
+        ] else
+          Text('连接服务器', style: t.textTheme.titleMedium),
         const SizedBox(height: 12),
         TextField(
           controller: _ctl,
-          autofocus: true,
+          autofocus: _saved.isEmpty,
           keyboardType: TextInputType.url,
           decoration: InputDecoration(
             labelText: '服务器地址',
             hintText: '例如 im.example.com',
             border: const OutlineInputBorder(),
-            errorText: _err,
+            errorText: _saved.isNotEmpty && _ctl.text.isEmpty ? null : _err,
             errorMaxLines: 3,
           ),
           onSubmitted: (_) => _busy ? null : _check(),
@@ -107,12 +210,12 @@ class _ServerStepState extends State<_ServerStep> {
         const SizedBox(height: 8),
         Text(
           '填你或朋友部署的 Cipher IM 服务器。只支持 https://，客户端不内置任何服务器。',
-          style: Theme.of(context).textTheme.bodySmall,
+          style: t.textTheme.bodySmall,
         ),
         const SizedBox(height: 16),
         FilledButton(
           onPressed: _busy ? null : _check,
-          child: _busy ? const _Spinner() : const Text('连接'),
+          child: _busy && _picking == null ? const _Spinner() : const Text('连接'),
         ),
       ],
     );
@@ -120,8 +223,16 @@ class _ServerStepState extends State<_ServerStep> {
 }
 
 class _AuthStep extends StatefulWidget {
-  const _AuthStep({required this.server, required this.onBack, required this.onSignedIn});
+  const _AuthStep({
+    required this.server,
+    required this.onBack,
+    required this.onSignedIn,
+    required this.connections,
+    this.prefill,
+  });
   final ServerInfo server;
+  final SavedConnection? prefill;
+  final ConnectionStore connections;
   final VoidCallback onBack;
   final Future<void> Function(Vault v) onSignedIn;
 
@@ -138,6 +249,22 @@ class _AuthStepState extends State<_AuthStep> {
   final _pw = TextEditingController();
   final _pw2 = TextEditingController();
   final _invite = TextEditingController();
+
+  /// 默认不记密码；之前记过的，这次默认接着记
+  bool _rememberPw = false;
+
+  @override
+  void initState() {
+    super.initState();
+    final p = widget.prefill;
+    if (p != null) {
+      _user.text = p.username;
+      if (p.password != null) {
+        _pw.text = p.password!;
+        _rememberPw = true;
+      }
+    }
+  }
 
   Future<void> _submit() async {
     final user = _user.text.trim();
@@ -165,6 +292,15 @@ class _AuthStepState extends State<_AuthStep> {
               invite: _invite.text.trim(),
             )
           : await Account.login(server: widget.server.base, username: user, password: pw);
+      // 记连接失败不挡登录
+      try {
+        await widget.connections.remember(
+          server: widget.server.base.toString(),
+          username: v.username,
+          displayName: v.displayName,
+          password: _rememberPw ? pw : null,
+        );
+      } catch (_) {}
       await widget.onSignedIn(v);
     } catch (e) {
       if (mounted) setState(() => _err = '$e');
@@ -213,6 +349,16 @@ class _AuthStepState extends State<_AuthStep> {
         field(_pw, '密码', obscure: true),
         if (_register) field(_pw2, '再输一次密码', obscure: true),
         if (_register) field(_invite, '邀请码', hint: '向服务器管理员要'),
+        CheckboxListTile(
+          value: _rememberPw,
+          onChanged: _busy ? null : (on) => setState(() => _rememberPw = on ?? false),
+          title: const Text('记住密码'),
+          subtitle: const Text('存在本机系统密钥库里。不勾的话只记服务器和用户名'),
+          controlAffinity: ListTileControlAffinity.leading,
+          contentPadding: EdgeInsets.zero,
+          dense: true,
+        ),
+        const SizedBox(height: 4),
         if (_err != null)
           Padding(
             padding: const EdgeInsets.only(bottom: 12),

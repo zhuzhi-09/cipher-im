@@ -5,6 +5,7 @@ import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
+import 'connections.dart';
 import 'platform.dart';
 import 'service.dart';
 import 'ui/home.dart';
@@ -13,6 +14,8 @@ import 'vault.dart';
 
 Future<void> main(List<String> args) async {
   WidgetsFlutterBinding.ensureInitialized();
+  // 上次给外部软件打开留下的临时明文
+  unawaited(ChatService.cleanOpenedFiles());
   final store = await VaultStore.open();
   Vault? vault;
   String? loadError;
@@ -50,6 +53,7 @@ class _CipherAppState extends State<CipherApp> with WidgetsBindingObserver {
   ChatService? _svc;
   DesktopShell? _shell;
   final _navKey = GlobalKey<NavigatorState>();
+  final _connections = ConnectionStore();
   String? _loadError;
 
   @override
@@ -192,6 +196,6 @@ class _CipherAppState extends State<CipherApp> with WidgetsBindingObserver {
         ),
       );
     }
-    return SetupScreen(onSignedIn: _onSignedIn);
+    return SetupScreen(onSignedIn: _onSignedIn, connections: _connections);
   }
 }

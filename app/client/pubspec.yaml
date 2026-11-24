@@ -1,7 +1,7 @@
 name: cipherim
 description: "Cipher IM 原生客户端（Windows / 安卓）：端到端加密聊天，自己部署的服务器。"
 publish_to: 'none'
-version: 0.1.0+1
+version: 0.2.0+1
 
 environment:
   sdk: ^3.13.7
@@ -10,6 +10,7 @@ dependencies:
   cipher_core:
     path: ../core
   dynamic_color: ^1.7.0
+  file_selector: ^1.1.0
   flutter:
     sdk: flutter
   flutter_local_notifications: ^23.0.4
@@ -18,6 +19,7 @@ dependencies:
   flutter_secure_storage: ^11.2.0
   path_provider: ^2.1.6
   tray_manager: ^0.5.1
+  video_player: ^2.14.1
   window_manager: ^0.5.1
 
 dev_dependencies:

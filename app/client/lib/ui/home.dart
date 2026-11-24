@@ -9,10 +9,13 @@ import 'package:cipher_core/cipher_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../media.dart';
 import '../platform.dart';
 import '../service.dart';
 import '../vault.dart';
 import '../update.dart';
+import 'attachments.dart';
+import 'safety.dart';
 import 'settings.dart';
 import 'update_dialog.dart';
 
@@ -289,7 +292,10 @@ class _ConvList extends StatelessWidget {
 String _preview(ChatService svc, Conv c, LocalMsg m) {
   final body = switch (m.type) {
     'text' => m.payload['text'] as String? ?? '',
-    'file' => '[文件] ${m.payload['name'] ?? ''}',
+    'file' =>
+      mediaKindOf(m.payload['mime'] as String?, m.payload['name'] as String? ?? '') == MediaKind.image
+          ? '[图片]'
+          : '[文件] ${m.payload['name'] ?? ''}',
     _ => m.payload['text'] as String? ?? '',
   };
   if (!c.isGroup) return body;
@@ -367,6 +373,10 @@ class _ChatPageState extends State<_ChatPage> {
         final peer = c.isGroup ? null : svc.peerOf(c);
         final peerRead = peer == null ? 0 : (svc.receipts[c.id]?[peer.user] ?? 0);
         final title = svc.titleOf(c);
+        final changed = [
+          for (final m in c.members)
+            if (m.user != svc.vault.username && svc.trustChanged(m.user)) m,
+        ];
         return Scaffold(
           appBar: AppBar(
             automaticallyImplyLeading: !widget.embedded,
@@ -397,6 +407,14 @@ class _ChatPageState extends State<_ChatPage> {
               ],
             ),
             actions: [
+              if (peer != null)
+                IconButton(
+                  tooltip: '核对安全码',
+                  icon: svc.trustChanged(peer.user)
+                      ? Icon(Icons.gpp_maybe, color: cs.error)
+                      : const Icon(Icons.verified_user_outlined),
+                  onPressed: () => _openSafety(context, svc, peer),
+                ),
               if (c.isGroup)
                 IconButton(
                   tooltip: '成员',
@@ -411,6 +429,23 @@ class _ChatPageState extends State<_ChatPage> {
           ),
           body: Column(
             children: [
+              if (changed.isNotEmpty)
+                MaterialBanner(
+                  leading: Icon(Icons.gpp_maybe, color: cs.error),
+                  content: Text('${changed.map((m) => m.displayName).join('、')} 的安全码变了，建议重新核对'),
+                  actions: [
+                    TextButton(
+                      onPressed: () => changed.length == 1
+                          ? _openSafety(context, svc, changed.first)
+                          : showModalBottomSheet<void>(
+                              context: context,
+                              showDragHandle: true,
+                              builder: (_) => _MembersSheet(svc: svc, conv: c),
+                            ),
+                      child: const Text('去核对'),
+                    ),
+                  ],
+                ),
               Expanded(
                 child: list.isEmpty
                     ? Center(
@@ -432,13 +467,47 @@ class _ChatPageState extends State<_ChatPage> {
                         },
                       ),
               ),
+              if (svc.uploading[c.id] != null)
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 4, 16, 0),
+                  child: Row(
+                    children: [
+                      const Expanded(child: LinearProgressIndicator()),
+                      const SizedBox(width: 12),
+                      Text(
+                        '正在加密上传 ${svc.uploading[c.id]} 个文件',
+                        style: t.textTheme.labelMedium?.copyWith(color: cs.onSurfaceVariant),
+                      ),
+                    ],
+                  ),
+                ),
               SafeArea(
                 top: false,
                 child: Padding(
-                  padding: const EdgeInsets.fromLTRB(16, 8, 12, 12),
+                  padding: const EdgeInsets.fromLTRB(4, 8, 12, 12),
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
+                      MenuAnchor(
+                        builder: (context, ctl, _) => IconButton(
+                          tooltip: '发送图片或文件',
+                          icon: const Icon(Icons.add_circle_outline),
+                          style: IconButton.styleFrom(minimumSize: const Size(48, 48)),
+                          onPressed: () => ctl.isOpen ? ctl.close() : ctl.open(),
+                        ),
+                        menuChildren: [
+                          MenuItemButton(
+                            leadingIcon: const Icon(Icons.image_outlined),
+                            onPressed: () => pickAndSendFiles(context, svc, c.id, imagesOnly: true),
+                            child: const Text('图片'),
+                          ),
+                          MenuItemButton(
+                            leadingIcon: const Icon(Icons.attach_file),
+                            onPressed: () => pickAndSendFiles(context, svc, c.id),
+                            child: const Text('文件'),
+                          ),
+                        ],
+                      ),
                       Expanded(
                         child: TextField(
                           controller: _draft,
@@ -485,16 +554,6 @@ class _Bubble extends StatelessWidget {
   final bool showSender;
   final bool read;
 
-  Future<void> _save(BuildContext context) async {
-    final messenger = ScaffoldMessenger.of(context);
-    try {
-      final path = await svc.saveFile(msg.payload);
-      messenger.showSnackBar(SnackBar(content: Text('已保存到 $path')));
-    } catch (_) {
-      messenger.showSnackBar(const SnackBar(content: Text('文件解密失败或已过期（服务器只保留 14 天）')));
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     final t = Theme.of(context);
@@ -515,35 +574,13 @@ class _Bubble extends StatelessWidget {
     final fg = mine ? cs.onPrimaryContainer : cs.onSurface;
     final Widget content = switch (msg.type) {
       'text' => SelectableText(msg.payload['text'] as String? ?? '', style: t.textTheme.bodyLarge?.copyWith(color: fg)),
-      'file' => InkWell(
-        onTap: () => _save(context),
-        borderRadius: BorderRadius.circular(12),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(Icons.description_outlined, color: fg),
-            const SizedBox(width: 12),
-            Flexible(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    msg.payload['name'] as String? ?? '文件',
-                    overflow: TextOverflow.ellipsis,
-                    style: t.textTheme.bodyLarge?.copyWith(color: fg),
-                  ),
-                  Text(
-                    '${_size((msg.payload['size'] as num?)?.toInt() ?? 0)} · 点击保存',
-                    style: t.textTheme.bodySmall?.copyWith(color: fg.withValues(alpha: 0.75)),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
+      'file' => FileContent(svc: svc, msg: msg, fg: fg),
       _ => Text('[暂不支持的消息：${msg.type}]', style: TextStyle(color: fg)),
     };
+    // 图片不套气泡底色，直接显示
+    final isImage =
+        msg.type == 'file' &&
+        mediaKindOf(msg.payload['mime'] as String?, msg.payload['name'] as String? ?? '') == MediaKind.image;
     const r = Radius.circular(20);
     const tail = Radius.circular(4);
     final status = msg.failed != null
@@ -563,7 +600,9 @@ class _Bubble extends StatelessWidget {
             ),
           ConstrainedBox(
             constraints: const BoxConstraints(maxWidth: 520),
-            child: Container(
+            child: isImage
+                ? content
+                : Container(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
               decoration: BoxDecoration(
                 color: mine ? cs.primaryContainer : cs.surfaceContainerHigh,
@@ -599,10 +638,8 @@ class _Bubble extends StatelessWidget {
   }
 }
 
-String _size(int n) {
-  if (n < 1024) return '$n B';
-  if (n < 1024 * 1024) return '${(n / 1024).toStringAsFixed(1)} KB';
-  return '${(n / 1024 / 1024).toStringAsFixed(1)} MB';
+void _openSafety(BuildContext context, ChatService svc, Member m) {
+  Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => SafetyPage(svc: svc, member: m)));
 }
 
 /* ---------------- 新聊天、新群聊、成员 ---------------- */
@@ -763,11 +800,26 @@ class _MembersSheet extends StatelessWidget {
             child: Text('${svc.titleOf(conv)} · ${conv.members.length} 位成员', style: t.textTheme.titleMedium),
           ),
           for (final m in conv.members)
-            ListTile(
-              leading: CircleAvatar(child: Text(m.displayName.characters.first)),
-              title: Text(m.user == svc.vault.username ? '${m.displayName}（我）' : m.displayName),
-              subtitle: Text('@${m.user} · ${m.devices.length} 台设备'),
-            ),
+            if (m.user == svc.vault.username)
+              ListTile(
+                leading: CircleAvatar(child: Text(m.displayName.characters.first)),
+                title: Text('${m.displayName}（我）'),
+                subtitle: Text('@${m.user} · ${m.devices.length} 台设备'),
+              )
+            else
+              ListTile(
+                leading: CircleAvatar(child: Text(m.displayName.characters.first)),
+                title: Text(m.displayName),
+                subtitle: Text('@${m.user} · ${m.devices.length} 台设备'),
+                trailing: svc.trustChanged(m.user)
+                    ? Icon(Icons.gpp_maybe, color: t.colorScheme.error)
+                    : const Icon(Icons.chevron_right),
+                onTap: () {
+                  final nav = Navigator.of(context);
+                  nav.pop();
+                  nav.push(MaterialPageRoute<void>(builder: (_) => SafetyPage(svc: svc, member: m)));
+                },
+              ),
         ],
       ),
     );

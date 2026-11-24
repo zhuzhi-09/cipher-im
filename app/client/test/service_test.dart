@@ -4,6 +4,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:cipher_core/cipher_core.dart';
 import 'package:cipherim/service.dart';
@@ -142,6 +143,28 @@ void main() {
     await carol.link.connect();
     await until(() => texts(carol, c2).contains('你离线时发的'), 'carol 补收');
 
+    // 发文件：alice 加密上传，bob 下载解密得到原文；本机缓存里只有密文
+    alice.blobCacheDir = await Directory('${tmp.path}/alice-blobs').create();
+    bob.blobCacheDir = await Directory('${tmp.path}/bob-blobs').create();
+    final pic = Uint8List.fromList(List<int>.generate(200 * 1024, (i) => (i * 31) & 0xff));
+    await alice.sendFile(conv, name: '照片.png', bytes: pic);
+    await until(() => bob.msgs[conv]!.any((m) => m.type == 'file'), 'bob 收到文件');
+    final fm = bob.msgs[conv]!.lastWhere((m) => m.type == 'file');
+    expect(fm.payload['name'], '照片.png');
+    expect(fm.payload['mime'], 'image/png');
+    expect(fm.payload['size'], pic.length);
+    expect(await bob.fileBytes(fm.payload), pic);
+    final cached = Directory('${tmp.path}/bob-blobs').listSync().whereType<File>().single.readAsBytesSync();
+    expect(cached, isNot(pic));
+    expect(cached.length, greaterThan(pic.length)); // 密文带认证标签
+    // 第二次从缓存读，不再走网络也能解开
+    expect(await bob.fileBytes(fm.payload), pic);
+    expect(alice.uploading, isEmpty);
+    await expectLater(
+      alice.sendFile(conv, name: 'big.bin', bytes: Uint8List(ChatService.maxFileBytes + 1)),
+      throwsStateError,
+    );
+
     // 本机密钥库：存盘再读回，会话状态还在，能继续解密新消息
     final store = VaultStore.forTest(File('${tmp.path}/bob2.bin'), randomBytes(32));
     await store.save(bob.vault);
@@ -149,6 +172,27 @@ void main() {
     expect(reloaded.username, 'bob');
     expect(reloaded.client.sessions.has('alice', alice.vault.deviceId), isTrue);
     expect(texts(ChatService(reloaded, store), conv), containsAll(['你好 bob', '收到']));
+
+    // 安全码：发过消息后双方都拿到了对方身份公钥，两边算出来一样；
+    // 标记已验证会存进密钥库；对方换了密钥（模拟）就变成「已变更」
+    final aSees = alice.safetyOf('bob').single;
+    final bSees = bob.safetyOf('alice').single;
+    expect(aSees.safety, isNotNull);
+    expect(aSees.safety, bSees.safety);
+    expect(aSees.safety, hasLength(60));
+    expect(aSees.state, TrustState.unverified);
+    alice.markVerified(aSees);
+    expect(alice.safetyOf('bob').single.state, TrustState.verified);
+    expect(alice.vault.trust.containsKey('bob/${bob.vault.deviceId}'), isTrue);
+    final reAlice = Vault.fromJson(jsonDecode(jsonEncode(alice.vault.toJson())) as Map<String, dynamic>);
+    expect(reAlice.trust['bob/${bob.vault.deviceId}']!.safety, aSees.safety);
+    final otherKeys = await createDeviceKeys();
+    final fake = Vault.fromJson(jsonDecode(jsonEncode(alice.vault.toJson())) as Map<String, dynamic>)
+      ..idkeys['bob/${bob.vault.deviceId}'] = toB64(otherKeys.identity.ikSigPub);
+    final fakeSvc = ChatService(fake, store);
+    expect(fakeSvc.safetyOf('bob').single.state, TrustState.changed);
+    expect(fakeSvc.trustChanged('bob'), isTrue);
+    expect(alice.trustChanged('bob'), isFalse);
 
     for (final s in [alice, bob, carol]) {
       await s.shutdown();

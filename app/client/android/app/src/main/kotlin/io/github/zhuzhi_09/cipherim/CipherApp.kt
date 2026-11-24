@@ -7,6 +7,8 @@ import android.net.Uri
 import android.os.PowerManager
 import android.provider.Settings
 import androidx.core.content.ContextCompat
+import androidx.core.content.FileProvider
+import java.io.File
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.embedding.engine.FlutterEngineCache
 import io.flutter.embedding.engine.dart.DartExecutor
@@ -67,6 +69,28 @@ class CipherApp : Application() {
                     } else {
                         startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
                         result.success(true)
+                    }
+                }
+                "openFile" -> {
+                    // 用系统里能打开这种文件的应用打开（只允许缓存目录下 cipherim-open 里的文件）
+                    try {
+                        val f = File(call.argument<String>("path")!!)
+                        val dir = File(cacheDir, "cipherim-open").canonicalPath
+                        if (!f.canonicalPath.startsWith(dir + File.separator)) throw IllegalArgumentException("路径不对")
+                        val uri = FileProvider.getUriForFile(this, "$packageName.files", f)
+                        val mime = call.argument<String>("mime").takeUnless { it.isNullOrEmpty() } ?: "*/*"
+                        val view = Intent(Intent.ACTION_VIEW)
+                            .setDataAndType(uri, mime)
+                            .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                        startActivity(
+                            Intent.createChooser(view, "打开方式")
+                                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                        )
+                        result.success(true)
+                    } catch (e: android.content.ActivityNotFoundException) {
+                        result.error("no_app", "没有能打开这种文件的应用", null)
+                    } catch (e: Exception) {
+                        result.error("open_failed", e.message, null)
                     }
                 }
                 else -> result.notImplemented()

@@ -10,7 +10,7 @@ import 'dart:io';
 import 'package:flutter/services.dart';
 
 /// 版本号由 CI 写入：flutter build ... --dart-define=APP_VERSION=1.2.3
-const appVersion = String.fromEnvironment('APP_VERSION', defaultValue: '0.1.0');
+const appVersion = String.fromEnvironment('APP_VERSION', defaultValue: '0.2.0');
 
 const releasesRepo = 'zhuzhi-09/cipher-im';
 const releasesPage = 'https://github.com/$releasesRepo/releases';
