@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#F7F7F8" />
+    <meta name="description" content="端到端加密即时通信，浏览器打开即用" />
+    <meta name="color-scheme" content="light dark" />
+    <title>Cipher IM</title>
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <link rel="apple-touch-icon" href="/icons/icon-192.svg" />
+    <link rel="icon" href="/icons/icon-192.svg" />
+    <link rel="stylesheet" href="/styles.css" />
+    <script>
+      // 首屏前定主题，避免浅色闪一下再变深（偏好存在 localStorage，键名与 src/web/theme.ts 一致）
+      (function () {
+        var pref = 'system';
+        try {
+          pref = localStorage.getItem('cipherim.theme') || 'system';
+        } catch (e) {}
+        var dark =
+          pref === 'dark' || (pref !== 'light' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+        document.documentElement.dataset.theme = dark ? 'dark' : 'light';
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/app.js"></script>
+  </body>
+</html>

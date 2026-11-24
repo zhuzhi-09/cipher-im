@@ -1,0 +1,13 @@
+{
+  "name": "Cipher IM",
+  "short_name": "Cipher",
+  "description": "端到端加密即时通信",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#F7F7F8",
+  "theme_color": "#F7F7F8",
+  "icons": [
+    { "src": "/icons/icon-192.svg", "sizes": "192x192", "type": "image/svg+xml", "purpose": "any maskable" },
+    { "src": "/icons/icon-512.svg", "sizes": "512x512", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}

@@ -1,0 +1,59 @@
+/* 主题 B · 扁平极简（Linear / Things 风）
+   特点：中性灰底、1px 发丝线代替阴影、单一强调色、8-10px 小圆角、紧凑密度 */
+:root {
+  --bg: #F7F7F8;
+  --panel: #FCFCFD;
+  --panel-2: #FFFFFF;
+  --line: #E7E7EA;
+  --text: #141417;
+  --muted: #87878F;
+  --accent: #2563EB;
+  --accent-dim: #DBE6FF;
+  --mine: #1B1B1F;
+  --radius: 10px;
+}
+
+body { background: var(--bg); color: var(--text); font-size: 14.5px; }
+
+.sidebar { background: transparent; border-right: 1px solid var(--line); }
+.avatar { background: #fff; border: 1px solid var(--line); color: var(--text); border-radius: 8px; font-weight: 600; }
+.avatar.group { border-radius: 8px; color: #2563EB; }
+.conv-item { border-radius: 8px; padding: 9px 10px; }
+.conv-item:hover { background: #fff; }
+.conv-item.active { background: #fff; box-shadow: inset 0 0 0 1px var(--line); }
+.preview { color: #87878F; }
+.badge { background: var(--accent); color: #fff; }
+.dot.online { background: #22C55E; box-shadow: none; }
+
+button.primary { background: #1B1B1F; color: #fff; border-radius: 8px; font-weight: 500; }
+button.primary:hover { filter: none; opacity: .9; }
+button.secondary { background: #fff; border: 1px solid var(--line); color: #3C3C43; border-radius: 8px; }
+button.ghost { color: #87878F; }
+
+.chat-head { background: var(--bg); border-bottom: 1px solid var(--line); backdrop-filter: none; }
+.chat-title { font-weight: 600; font-size: 15.5px; }
+.bubble { background: #fff; border: 1px solid var(--line); border-radius: 10px; padding: 9px 12px; }
+.row.mine .bubble { background: var(--mine); color: #fff; border-color: var(--mine); }
+.row.mine .bubble .file-meta { color: #B9B9C0; }
+.bubble-avatar { background: #EFEFF2; color: #6B6B73; border-radius: 8px; }
+.day-sep { background: transparent; color: #A0A0A8; padding: 2px 0; }
+.meta { color: #9A9AA2; }
+
+.composer { background: var(--bg); border-top: 1px solid var(--line); }
+.composer textarea { background: #fff; border: 1px solid var(--line); border-radius: 10px; }
+.composer textarea:focus { border-color: #C9C9CF; box-shadow: none; }
+.attach { background: #fff; border: 1px solid var(--line); border-radius: 8px; }
+button.send { border-radius: 8px; }
+
+.auth-page { background: var(--bg); }
+.auth-card { background: #fff; border: 1px solid var(--line); border-radius: 14px; box-shadow: none; }
+.brand-mark { background: #fff; border: 1px solid var(--line); color: #1B1B1F; border-radius: 8px; }
+.field input { background: #fff; border: 1px solid var(--line); border-radius: 8px; }
+.field input:focus { border-color: #C9C9CF; box-shadow: none; }
+.tabs { background: #fff; border: 1px solid var(--line); border-radius: 10px; padding: 3px; }
+.tab { border-radius: 8px; }
+.tab.active { background: #1B1B1F; color: #fff; }
+.overlay { background: rgba(17, 17, 20, .28); }
+.dialog { background: #fff; border: 1px solid var(--line); border-radius: 14px; box-shadow: 0 12px 32px rgba(17, 17, 20, .12); }
+.safety-grid span { background: #F5F5F7; border: 1px solid var(--line); color: #1B1B1F; }
+.toast { background: #1B1B1F; color: #fff; border: 0; }

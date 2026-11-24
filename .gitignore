@@ -1,0 +1,8 @@
+out/
+data/
+node_modules/
+vendor/
+*.log
+.DS_Store
+data-test/
+dist/

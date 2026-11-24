@@ -1,0 +1,36 @@
+{
+  "name": "cipher-im",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "端到端加密即时通信：一套 Web 代码覆盖浏览器 / 桌面 / 手机",
+  "license": "AGPL-3.0-only",
+  "repository": "github:zhuzhi-09/cipher-im",
+  "scripts": {
+    "setup": "bash scripts/setup.sh",
+    "build": "bash scripts/build.sh",
+    "start": "bash scripts/run.sh",
+    "test": "bash scripts/test.sh",
+    "typecheck": "tsc --noEmit -p tsconfig.json"
+  },
+  "dependencies": {
+    "@noble/curves": "^1.8.1",
+    "@noble/hashes": "^1.7.1",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "web-push": "^3.6.7",
+    "ws": "^8.18.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.5",
+    "@types/react": "^18.3.18",
+    "@types/react-dom": "^18.3.5",
+    "@types/web-push": "^3.6.4",
+    "@types/ws": "^8.5.13",
+    "esbuild": "^0.24.2",
+    "typescript": "^5.7.3"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}
